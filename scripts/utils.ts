@@ -1,3 +1,4 @@
+import { businessEmail } from "@/constants";
 import getUserLocale from "get-user-locale";
 import { t } from "i18next";
 import { useSearchParam } from "react-use";
@@ -28,7 +29,7 @@ export const socialNetworks: SocialNetworkItem[] = [
   {
     name: t("social.email"),
     path: "/img/socialnetwork/email.png",
-    link: "mailto:business@craner.hk",
+    link: `mailto:${businessEmail}`,
   },
   {
     name: t("social.whatsapp"),

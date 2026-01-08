@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useIsCN } from "@/scripts/utils";
 import { useTranslation } from "next-export-i18n";
+import { businessEmail } from "@/constants";
 
 const ENDPOINT =
   "https://env-1gy344xr89dc3a71-1251089768.ap-shanghai.app.tcloudbase.com/submit";
@@ -360,7 +361,7 @@ export default function WaitingListForm({ onClose }: { onClose: () => void }) {
             </div>
           )} */}
 
-            <a href="mailto:business@craner.hk">Email: business@craner.hk</a>
+            <a href={`mailto:${businessEmail}`}>Email: {businessEmail}</a>
             <p>Tel: +852 64378432</p>
             <p>+86 13926508390</p>
             <p>+852 64876758</p>

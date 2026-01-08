@@ -114,3 +114,5 @@ export const matchText = (t: (key: string) => string) => [
   `<strong class="text-2xl">${t('video_prompts_module.feature1_02_desc')}</strong>`,
 ]
 
+
+export const businessEmail = "cranerbusiness@craner.hk";
