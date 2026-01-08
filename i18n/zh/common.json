@@ -1,0 +1,161 @@
+{
+  "site_title": "可越科技 | 智能建造工程与AI塔吊系统",
+  "site_description": "可越科技是一家香港高科技企业，专注于智能建造工程机械。我们整合AI人工智能、物联网IoT及自动控制技术，提升施工安全、效率与可持续性。获InnoHK香港智能建造研发中心HKCRC支持。",
+  "site_keywords": "智能建造, AI塔吊系统, 建筑科技, 塔式起重机AI, 施工安全, 物联网建造, 智慧工地, 自动化起重机, 建筑自动化, 香港建筑科技, 可越科技",
+  "og_title": "可越科技 - 智能建造工程",
+  "og_description": "以AI驱动的塔吊系统、物联网整合及自动控制技术，重塑建造行业。提升全球建筑工地的安全性与效率。",
+  "join": "联系我们",
+  "ph": "支持我们",
+  "click_to_shuffle": "点击卡片刷新下一張",
+  "footer": {
+    "copyright": "版权所有 © {{year}} 可越科技. All Right Reserved.",
+    "company_name": "可越科技有限公司",
+    "address": "公司地址(中国内地): 深圳市前海深港合作区南山街道梦海大道5188号前海深港青年梦工场北区L栋202",
+    "address2": "公司地址(香港): 香港特别行政区新界沙田区香港科学园17w",
+    "contact": "商务合作: +852 64378432 / +86 13926508390 / +852 64876758"
+  },
+  "parallaxSection": {
+    "slogan": "以工程智能，赋能建造行业的每一次进化",
+    "desc": "作为诞生于香港的高科技企业，CraneR 致力将前沿科研成果转化为可规模化落地的工程能力。我们以 AI、IoT 与自动控制技术为核心，重塑工程机械的作业方式，降低施工风险，提升效率与品质，推动建造行业由经验驱动迈向数据与智能驱动"
+  },
+  "form": {
+    "success2": "我们随时欢迎您的沟通和合作",
+    "success1": "感谢你关注我们！",
+    "success_submit_again": "重新提交",
+    "wechat": "联系我们",
+    "whatsapp": "WhatsApp: +852 64378432",
+    "business_opportunities": "商机洽谈"
+  },
+  "lite": {
+    "toHome": "了解更多企业服务",
+    "desc": "可越科技，超越可及",
+    "title2": "用技术和创新驱动建筑行业未来",
+    "title3": "助力行业智能化转型"
+  },
+  "video_prompts_module": {
+    "feature_01_title": "让工程现场，全面进入智能时代",
+    "feature_01_intro": "从智能塔吊到 AI 安全系统，再到高精度智能吊运设备，CraneR 构建覆盖“感知—决策—执行”的工程智能产品矩阵，持续为建造行业创造可量化的价值提升",
+    "feature1_01_desc": "工程有边界，智能有判断，让每一次起吊都安全而精准",
+    "feature1_02_desc": "智能，不止看得见，更稳得住"
+  },
+  "video_slider": {
+     "prompts1": {
+      "first": "全方位AI操作",
+      "second": "稳钩控制"
+     }
+  },
+  "news_sections": {
+    "author": "可越科技",
+    "title": "创新技术 引领未来",
+    "subtitle": "我们致力于携手推动建筑科技革新",
+    "news_1_title": "HKCRC首创AI天秤系统落地香港白田邨重建项目 引领公营房屋建造安全与效率新标准",
+    "news_1_subtitle": "InnoHK香港智能建造研发中心（HKCRC）研发的AI天秤 (塔式起重机, 中国内地俗称 '塔吊', 香港俗称 '天秤') 系统首次成功应用于香港房屋署白田邨13期公营房屋重建项目，通过创新技术实现工地安全与施工效率的双重变革。",
+    "news_2_title": "香港首个全港范围内的AI天秤系统试点项目成功上线",
+    "news_2_subtitle": "香港房屋署白田邨13期公营房屋重建项目引入AI天秤系统，通过智能监控和预警功能，大幅提升工地安全性和施工效率。",
+    "news_3_title": "AI天秤系统成功应用于香港房屋署白田邨13期公营房屋重建项目",
+    "news_3_subtitle": "AI天秤系统成功应用于香港房屋署白田邨13期公营房屋重建项目，通过智能监控和预警功能，大幅提升工地安全性和施工效率。"
+  },
+  "business_box": {
+    "title": "智能塔机硬件架构解决方案",
+    "subtitle": "深度融合工业级传感器、视觉识别与边缘计算技术，为塔机提供全方位的感知能力与稳定可靠的控制基础。",
+    "card1_title": "工业级智能感知体系",
+    "card1_desc": "集成高分辨率视觉传感器、载荷与运动传感器及风速监测模块，实现塔机运行状态与周边施工环境的实时精准感知。",
+    "card2_title": "边缘智能与低时延控制",
+    "card2_desc": "部署专用边缘计算核心，支持本地数据快速处理与低时延控制，确保在恶劣施工环境下系统依然能够稳定、高效运行。",
+    "card3_title": "工业级连接与可靠性",
+    "card3_desc": "采用 5G 与工业有线网络 dual-backup 通信方案，配合模块化硬件接口，支持快速安装部署与未来功能扩展，适应长期严苛作业。",
+    "learn_more": "商务合作"
+  },
+  "feature_box": {
+    "label": "模块化解决方案",
+    "title": "一体化工程智能产品矩阵",
+    "desc": "基于统一的 CraneR 智能底座，我们提供可自由组合的硬件模块与软件算法，帮助施工单位降低技术准入门槛，快速实现工地数字化与智能化转型。",
+    "featured_label": "核心能力",
+    "featured_title": "全场景感知，优化作业流程",
+    "featured_desc": "集成高精度视觉 AI 与多源传感器融合算法，实时识别吊装作业中的危险因素与效率瓶颈，并提供自动化的操作辅助。",
+    "cta": "了解产品详情",
+    "atlas_title": "沉浸式远程驾驶的人机协同系统",
+    "atlas_desc": "基于多视角感知与低时延控制技术，CraneR 打造接近真实驾驶体验的远程操控环境，在保障安全边界的前提下，实现人机协同决策与精准执行。",
+    "checkout_title": "智能路径规划系统",
+    "checkout_desc": "自动生成最优吊装路径，避开现场障碍物，显著提升复杂工况下的作业效率。",
+    "payment_links_title": "AI 安全行为识别",
+    "payment_links_desc": "实时监测吊钩下方人员侵入及操作员疲劳状态，构建工地的'数字安全大脑'。",
+    "billing_title": "数字化运维管理平台",
+    "billing_desc": "全面记录设备运行数据，提供预测性维护建议，降低设备停机风险。",
+    "image1_label": "全场景工地感知",
+    "image2_label": "工业级硬件模块",
+    "image3_label": "智能交互界面"
+  },
+  "path_planning": {
+    "label": "核心算法模块",
+    "title": "智能路径规划系统",
+    "desc": "通过高精度工地建模与实时障碍物检测，系统可自动生成最优吊装路径。在保障安全距离的前提下，显著缩短吊装循环时间，降低操作员疲劳度。",
+    "featured_label": "技术亮点",
+    "featured_title": "自动规避，精准直达",
+    "featured_desc": "融合动态防碰撞算法与多机协同技术，系统能实时感知吊钩周边 360° 环境，自动修正偏航，确保在复杂狭窄空间内的作业安全。",
+    "cta": "查看技术文档",
+    "image1_label": "路径自动生成",
+    "image2_label": "实时环境建模",
+    "image3_label": "障碍物识别",
+    "image4_label": "高精度执行"
+  },
+  "ai_safety": {
+    "label": "主动安全与精准控制",
+    "title": "AI 安全检测与智能稳钩系统",
+    "desc": "将视觉 AI 深度学习与高频动力学算法相结合，为塔机装上'眼睛'与'大脑'。系统不仅能实时识别现场违规行为，更能通过算法抵消吊运过程中的惯性摆动，实现厘米级精准定位。",
+    "featured_label": "核心技术",
+    "featured_title": "多维安全防护，极致稳定体验",
+    "featured_desc": "AI 实时监控吊钩危险区、操作员状态及环境风险，配合自研的稳钩算法，即使在强风环境下也能保持吊装物的平稳，大幅降低施工风险。",
+    "cta": "了解安全详情",
+    "image1_label": "AI 实时风险检测",
+    "image2_label": "算法稳钩性能监测",
+    "image3_label": "全方位安全监管"
+  },
+  "business_swiper": {
+    "title": "让安全，不再依赖经验与运气",
+    "desc": "CraneR AI Safety System 通过视觉 AI 与行为识别技术，实时感知工地风险，提前识别违规与危险状态，将安全管理从事后响应转变为主动预防。",
+    "cta": "为企业探索 Stripe",
+    "partners": {
+      "CraneR AI Safety System": {
+        "name": "CraneR AI Safety System",
+        "stat1_value": "15+",
+        "stat1_desc": "AI 实时监控吊钩危险区，保障每一次起吊安全，已在多个项目中落地应用",
+        "stat2_value": "30%",
+        "stat2_desc": "吊装事故率降低30%，工地安全事故率降低50%",
+        "products_label": "关联产品",
+        "featured_title": "AI 驱动的塔吊主动安全监控系统，让每一次吊装，都在安全之中发生"
+      },
+      "Safety Supervision System": {
+        "name": "Safety Supervision System",
+        "stat1_value": "100%",
+        "stat1_desc": "工地全流程数字化监管，从入场到完工，全生命周期安全管理。",
+        "stat2_value": "50+",
+        "stat2_desc": "多项目集中监管能力，提升监管效率。",
+        "products_label": "关联产品",
+        "featured_title": "安全 CMP 数智工程监督系统，让安全从“被动管理”走向“主动治理”"
+      },
+      "AI Crane Control System": {
+        "name": "AI Crane Control System",
+        "stat1_value": "160%",
+        "stat1_desc": "AI 辅助起重机路径规划，大幅提升工地安全性和施工效率。",
+        "stat2_value": "100%",
+        "stat2_desc": "覆盖吊运作业空间范围内的规划路径生成",
+        "products_label": "关联产品",
+        "featured_title": "AI 路径规划，AI 稳钩，AI 防碰撞，大幅提升工地安全性和施工效率。"
+      },
+      "4S : Site Safety System": {
+        "name": "4S : Site Safety System",
+        "stat1_value": "100%",
+        "stat1_desc": "构建安全未來：4S智慧工地守护者" ,
+        "stat2_value": "10+",
+        "stat2_desc": "多项目集中部署，提升工地安全管理效率。",
+        "products_label": "关联产品",
+        "featured_title": "智領安全新时代：4S智慧工地系統"
+      }
+    }
+  },
+  "youtube": {
+    "loading": "正在加载 YouTube 视频...",
+    "loading_desc": "如果当前网络限制访问 YouTube，视频可能无法播放"
+  }
+}

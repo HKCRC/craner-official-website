@@ -1,0 +1,265 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 暂时不用 token 了 */
+:root {
+  --foreground-rgb: 255, 255, 255;
+}
+
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: #f7f9fc;
+  user-select: none;
+}
+
+.main {
+  @apply flex flex-col mx-auto items-center justify-between pt-24;
+}
+
+.main-btn {
+  /* Gradient 用 CSS 好直接从 Figma 复制过来 */
+  @apply cursor-pointer text-white py-2.5 px-8 rounded-xl transition-all;
+  background: linear-gradient(90deg, #3255FF 0%, #6100FF 100%);
+  text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.main-btn:hover{
+  background: linear-gradient(90deg, #2e4ff0 0%, #5a00ea 100%);
+}
+
+.main-btn:active{
+  background: linear-gradient(90deg, #2946d7 0%, #4600b6 100%);
+  transform: scale(.98, .99);
+}
+
+/* Footer product hunt */
+.footer-ph:hover{
+  transform: scale(.98, .99);
+}
+
+.footer-ph:active{
+  transform: scale(.96, .96);
+}
+
+/* Button with arrow, control right arrow animation */
+.arrow-btn path{
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+.arrow-btn .arrow-symbol{
+  transition: transform .2s;
+  transform: translateX(0);
+}
+
+.arrow-btn .arrow-symbol path:last-child {
+  stroke-dasharray: 10;
+  stroke-dashoffset: 10;
+  transition: stroke-dashoffset .2s;
+}
+/* Arrow move right when hover when hover */
+.arrow-btn:hover .arrow-symbol{
+  transform: translateX(4px);
+}
+/* Expand arrow when hover */
+.arrow-btn:hover .arrow-symbol path:last-child {
+  stroke-dashoffset: 20;
+}
+
+.section-bg {
+  @apply h-full w-full bg-[#212124] rounded-3xl flex items-center justify-center
+  border border-white border-opacity-20;
+}
+
+.section-bg-left {
+  @apply h-full w-full bg-[#212124] rounded-md flex items-start justify-start flex-col
+  border border-white border-opacity-20;
+}
+
+.section-inner{
+  @apply w-full h-full flex flex-col;
+}
+
+.skyblue {
+  @apply text-[#25FFBE];
+}
+
+.purple {
+  @apply text-[#CFB1FF];
+}
+
+.nobar {
+  scrollbar-width: none;
+}
+
+.nobar::-webkit-scrollbar {
+  display: none;
+}
+
+.page-mx {
+  @apply px-3 md:px-24
+}
+
+.page-mw {
+  @apply md:max-w-7xl mx-auto
+}
+
+.main-bg-gradient {
+  @apply w-full h-full z-10 absolute top-0;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.75) 0%, transparent 70%);
+}
+
+.main-bg {
+  mask-image: linear-gradient(to bottom, black 50%, transparent 90%);
+}
+
+.main-video {
+  border-color: #27272E;
+}
+
+.section-title-left{
+  @apply text-left;
+}
+
+.section-title-left-title{
+  @apply text-3xl md:text-5xl font-bold flex;
+}
+
+.section-title-left-subtitle{
+  @apply text-sm md:text-base font-normal mt-2 opacity-70;
+}
+
+.fade-out-bottom {
+  -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+}
+
+.ai-chat-bg {
+  background: url(/img/s4_gradient.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+@keyframes aurora {
+  0% {
+    transform: rotate(0deg);
+    background-position: left top;
+    border-radius: 100px;
+  }
+  25% {
+    background-position: right top;
+    border-radius: 100px;
+  }
+  50% {
+    background-position: right bottom;
+    border-radius: 100px;
+  }
+  75% {
+    background-position: left bottom;
+    border-radius: 100px;
+  }
+  100% {
+    transform: rotate(360deg);
+    background-position: left top;
+    border-radius: 100px;
+  }
+}
+
+.aurora-outer {
+  background: linear-gradient(45deg, #32a6ff 0%, #3f6fff 49%, #8d54ff 82%);
+  background-size: 200%;
+  animation: aurora 4s infinite;
+}
+
+.aurora-inner {
+  background: radial-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.15));
+  background-size: 200%;
+  animation: aurora 2s infinite;
+}
+
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-spin{
+  animation-name: spin;
+  animation-iteration-count: infinite;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+}
+
+/* React simple image viewer */
+#ReactSimpleImageViewer{
+  height: calc(100% - 81px) !important;
+  margin-top: 80px !important;
+}
+
+.react-simple-image-viewer__close{
+  top: 70px !important;
+  right: 10px !important;
+  font-size: 50px !important;
+}
+
+.react-simple-image-viewer__next{
+  height: 60% !important;
+}
+
+.react-simple-image-viewer__previous{
+  height: 60% !important;
+}
+
+/* Input in waitlist join form */
+.waitlist-input{
+  @apply border-[1.5px] bg-[#F8F8F8] border-[#E2E2E2];
+  outline: none;
+  transition: .89s all cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.waitlist-input.selected,
+.waitlist-input:focus{
+  outline: none;
+  border-color: #492DFF;
+}
+
+@keyframes checkbox-appear {
+  0% { opacity: 0%; transform: scale(.9); }
+  100% { opacity: 100%; transform: scale(1); }
+}
+
+.checkbox-primary:checked{
+  animation: checkbox-appear .24s ease-in-out;
+  background-color: #4C27FF !important;
+  background-image: linear-gradient(-45deg, transparent 65%, #4C27FF 65.99%), linear-gradient(45deg, transparent 75%, #4C27FF 75.99%), linear-gradient(-45deg, #4C27FF 40%, transparent 40.99%), linear-gradient(45deg, #4C27FF 30%, hsl(var(--chkfg)) 30.99%, hsl(var(--chkfg)) 40%, transparent 40.99%), linear-gradient(-45deg, hsl(var(--chkfg)) 50%, #4C27FF 50.99%);
+  background-size: 18px;
+  background-position-x: 2px;
+  width: 24px;
+  height: 24px;
+}
+
+@keyframes phBgAni {
+  0% {background: linear-gradient(0deg, #992F49 0%, #511D93 100%)};
+  100% {background: linear-gradient(360deg, #992F49 0%, #511D93 100%)};
+}
+
+.ph-bg{
+  background: linear-gradient(0deg, #992F49 0%, #511D93 100%);
+  animation: phBgAni 4s infinite;
+  animation-timing-function: linear;
+}
+
+.nav-ph{
+  /* transition: .5s all cubic-bezier(0.075, 0.82, 0.165, 1); */
+}
+
+.nav-ph svg>path{
+  fill: white;
+}
+
+.nav-ph:hover {
+  color: #ff6154;
+}
+.nav-ph:hover svg>path{
+  fill: #ff6154;
+}

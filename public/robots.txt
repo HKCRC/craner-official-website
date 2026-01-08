@@ -1,0 +1,25 @@
+# CraneR Technology - Intelligent Construction Engineering
+# https://craner.hk
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /_next/
+Disallow: /404
+Crawl-delay: 1
+
+# Sitemaps
+Sitemap: https://craner.hk/sitemap.xml
+
+# Search Engine Specific
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Baiduspider
+Allow: /
+Crawl-delay: 1

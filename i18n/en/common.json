@@ -1,0 +1,161 @@
+{
+  "site_title": "CraneR Technology | Intelligent Construction Engineering & AI Crane Systems",
+  "site_description": "CraneR Technology is a pioneering Hong Kong high-tech company specializing in intelligent construction machinery. We integrate AI, IoT, and automated control systems to enhance construction safety, efficiency, and sustainability. Supported by InnoHK HKCRC.",
+  "site_keywords": "intelligent construction, AI crane system, construction technology, tower crane AI, construction safety, IoT construction, smart construction, automated crane, Hong Kong construction tech, InnoHK, HKCRC",
+  "og_title": "CraneR Technology - Intelligent Construction Engineering",
+  "og_description": "Transforming construction with AI-powered crane systems, IoT integration, and automated control. Enhancing safety and efficiency on construction sites worldwide.",
+  "join": "Contact Us",
+  "ph": "Support Us",
+  "click_to_shuffle": "Click to Refresh the Next Card",
+  "footer": {
+    "copyright": "Copyright © {{year}} CraneR Technology. All Right Reserved.",
+    "company_name": "CraneR Technology Co., Ltd.",
+    "address": "Company Address (Mainland China): 深圳市前海深港合作區南山街道夢海大道5188號前海深港青年夢工場北區L棟202",
+    "address2": "Company Address (Hong Kong): 17w, Hong Kong Science Park, New Territories, Hong Kong",
+    "contact": "Business Cooperation: +852 64378432 / +86 13926508390 / +852 64876758"
+  },
+  "parallaxSection": {
+    "slogan": "Empowering Every Evolution of Construction through Engineering Intelligence",
+    "desc": "Born in Hong Kong, CraneR is a high-tech company transforming advanced research into scalable engineering solutions. By integrating AI, IoT, and automatic control technologies, we redefine how construction machinery operates—reducing on-site risks, improving efficiency and quality, and driving the construction industry from experience-based practices toward data- and intelligence-driven development."
+  },
+  "form": {
+    "success2": "We welcome your communication and cooperation at any time",
+    "success1": "Thank you for your interest in us!",
+    "success_submit_again": "Submit Again",
+    "wechat": "Contact Us",
+    "whatsapp": "WhatsApp: +852 64378432",
+    "business_opportunities": "Business Opportunities"
+  },
+  "lite": {
+    "toHome": "Learn more about our corporate services",
+    "desc": "CraneR Technology, Rise beyond limits.",
+    "title2": "Driving the Future of Construction with Technology and Innovation",
+    "title3": "Empowering Industry Intelligent Transformation"
+  },
+  "video_prompts_module": {
+    "feature_01_title": "Bringing Construction Sites Fully into the Intelligent Era",
+    "feature_01_intro": "From intelligent tower cranes to AI safety systems, to high-precision intelligent lifting equipment, CraneR builds an engineering intelligence product matrix covering 'Perception—Decision—Execution', continuously creating quantifiable value improvements for the construction industry.",
+    "feature1_01_desc": "Engineering has boundaries, intelligence has judgment—making every lift safe and precise",
+    "feature1_02_desc": "Intelligence that is not just visible, but stable"
+  },
+  "video_slider": {
+    "prompts1": {
+      "first": "Full-AI Crane Operation",
+      "second": "Stable Hook Control"
+    }
+  },
+  "news_sections": {
+    "author": "CraneR Technology",
+    "title": "Innovative Technology, Leading the Future",
+    "subtitle": "We are committed to driving construction technology innovation together",
+    "news_1_title": "HKCRC's First AI Crane System Successfully Deployed in Hong Kong Pak Tin Estate Redevelopment Project, Setting New Standards for Public Housing Construction Safety and Efficiency",
+    "news_1_subtitle": "The AI crane system (tower crane, known as 'tower crane' in Mainland China and 'crane' in Hong Kong) developed by InnoHK Hong Kong Centre for Intelligent Construction Research and Development (HKCRC) was successfully applied for the first time in the Hong Kong Housing Authority's Pak Tin Estate Phase 13 public housing redevelopment project, achieving dual transformation of site safety and construction efficiency through innovative technology.",
+    "news_2_title": "Hong Kong's First Territory-Wide AI Crane System Pilot Project Successfully Launched",
+    "news_2_subtitle": "The Hong Kong Housing Authority's Pak Tin Estate Phase 13 public housing redevelopment project has introduced an AI crane system, significantly improving site safety and construction efficiency through intelligent monitoring and early warning functions.",
+    "news_3_title": "AI Crane System Successfully Applied in Hong Kong Housing Authority Pak Tin Estate Phase 13 Public Housing Redevelopment Project",
+    "news_3_subtitle": "The AI crane system has been successfully applied in the Hong Kong Housing Authority's Pak Tin Estate Phase 13 public housing redevelopment project, significantly improving site safety and construction efficiency through intelligent monitoring and early warning functions."
+  },
+  "business_box": {
+    "title": "Smart Tower Crane Hardware Architecture Solution",
+    "subtitle": "Deep integration of industrial-grade sensors, vision recognition, and edge computing technologies to provide comprehensive perception capabilities and stable, reliable control foundation for tower cranes.",
+    "card1_title": "Industrial-Grade Intelligent Perception System",
+    "card1_desc": "Integrated high-resolution vision sensors, load and motion sensors, and wind speed monitoring modules to achieve real-time precise perception of crane operating status and surrounding construction environment.",
+    "card2_title": "Edge Intelligence and Low-Latency Control",
+    "card2_desc": "Deploy dedicated edge computing cores to support rapid local data processing and low-latency control, ensuring stable and efficient operation even in harsh construction environments.",
+    "card3_title": "Industrial-Grade Connectivity and Reliability",
+    "card3_desc": "Adopt dual-backup communication solutions with 5G and industrial wired networks, combined with modular hardware interfaces, supporting rapid installation, deployment, and future functional expansion, adapting to long-term rigorous operations.",
+    "learn_more": "Business Cooperation"
+  },
+  "feature_box": {
+    "label": "Modular Solutions",
+    "title": "Integrated Engineering Intelligence Product Matrix",
+    "desc": "Based on a unified CraneR intelligent platform, we provide freely combinable hardware modules and software algorithms to help construction units lower technical entry barriers and rapidly achieve site digitalization and intelligent transformation.",
+    "featured_label": "Core Capabilities",
+    "featured_title": "Full-Scene Perception, Optimizing Workflow",
+    "featured_desc": "Integrated high-precision vision AI and multi-source sensor fusion algorithms to identify risk factors and efficiency bottlenecks in lifting operations in real-time, providing automated operational assistance.",
+    "cta": "Learn Product Details",
+    "atlas_title": "Immersive Remote Driving Human-Machine Collaborative System",
+    "atlas_desc": "Based on multi-perspective perception and low-latency control technology, CraneR creates a remote control environment that approaches real driving experience, achieving human-machine collaborative decision-making and precise execution while ensuring safety boundaries.",
+    "checkout_title": "Intelligent Path Planning System",
+    "checkout_desc": "Automatically generate optimal lifting paths, avoiding on-site obstacles, significantly improving operational efficiency under complex working conditions.",
+    "payment_links_title": "AI Safety Behavior Recognition",
+    "payment_links_desc": "Real-time monitoring of personnel intrusion under the hook and operator fatigue status, building a 'digital safety brain' for construction sites.",
+    "billing_title": "Digital Operations and Maintenance Management Platform",
+    "billing_desc": "Comprehensive recording of equipment operating data, providing predictive maintenance recommendations, reducing equipment downtime risks.",
+    "image1_label": "Full-Scene Site Perception",
+    "image2_label": "Industrial-Grade Hardware Modules",
+    "image3_label": "Intelligent Interactive Interface"
+  },
+  "path_planning": {
+    "label": "Core Algorithm Module",
+    "title": "Intelligent Path Planning System",
+    "desc": "Through high-precision site modeling and real-time obstacle detection, the system can automatically generate optimal lifting paths. Under the premise of ensuring safe distance, it significantly shortens lifting cycle time and reduces operator fatigue.",
+    "featured_label": "Technical Highlights",
+    "featured_title": "Automatic Avoidance, Precise Arrival",
+    "featured_desc": "Integrating dynamic anti-collision algorithms and multi-machine coordination technology, the system can perceive the 360° environment around the hook in real-time, automatically correct yaw, and ensure operational safety in complex and narrow spaces.",
+    "cta": "View Technical Documentation",
+    "image1_label": "Automatic Path Generation",
+    "image2_label": "Real-Time Environment Modeling",
+    "image3_label": "Obstacle Detection",
+    "image4_label": "High-Precision Execution"
+  },
+  "ai_safety": {
+    "label": "Active Safety and Precise Control",
+    "title": "AI Safety Detection and Intelligent Stable Hook System",
+    "desc": "Combining vision AI deep learning with high-frequency dynamic algorithms, we equip tower cranes with 'eyes' and 'brains'. The system can not only identify on-site violations in real-time but also offset inertial swings during lifting operations through algorithms, achieving centimeter-level precise positioning.",
+    "featured_label": "Core Technology",
+    "featured_title": "Multi-Dimensional Safety Protection, Ultimate Stability Experience",
+    "featured_desc": "AI monitors hook danger zones, operator status, and environmental risks in real-time. Combined with our self-developed stable hook algorithm, even in strong wind conditions, the load remains stable, significantly reducing construction risks.",
+    "cta": "Learn Safety Details",
+    "image1_label": "AI Real-Time Risk Detection",
+    "image2_label": "Stable Hook Performance Monitoring",
+    "image3_label": "Comprehensive Safety Supervision"
+  },
+  "business_swiper": {
+    "title": "Making Safety No Longer Dependent on Experience and Luck",
+    "desc": "CraneR AI Safety System uses vision AI and behavior recognition technology to perceive site risks in real-time, identify violations and dangerous conditions in advance, transforming safety management from reactive response to proactive prevention.",
+    "cta": "Explore Enterprise Solutions",
+    "partners": {
+      "CraneR AI Safety System": {
+        "name": "CraneR AI Safety System",
+        "stat1_value": "15+",
+        "stat1_desc": "AI real-time monitoring of hook danger zones, ensuring safe lifting operations, successfully deployed in multiple projects",
+        "stat2_value": "30%",
+        "stat2_desc": "30% reduction in lifting accident rate, 50% reduction in site safety accident rate",
+        "products_label": "Related Products",
+        "featured_title": "AI-Driven Tower Crane Active Safety Monitoring System—Every Lift Happens in Safety"
+      },
+      "Safety Supervision System": {
+        "name": "Safety Supervision System",
+        "stat1_value": "100%",
+        "stat1_desc": "Full-process digital supervision of construction sites, from entry to completion, full lifecycle safety management.",
+        "stat2_value": "50+",
+        "stat2_desc": "Multi-project centralized supervision capability, improving supervision efficiency.",
+        "products_label": "Related Products",
+        "featured_title": "Smart CMP Digital Engineering Supervision System—Moving Safety from 'Passive Management' to 'Active Governance'"
+      },
+      "AI Crane Control System": {
+        "name": "AI Crane Control System",
+        "stat1_value": "160%",
+        "stat1_desc": "AI-assisted crane path planning, significantly improving site safety and construction efficiency.",
+        "stat2_value": "100%",
+        "stat2_desc": "Complete coverage of planned path generation within the lifting operation space",
+        "products_label": "Related Products",
+        "featured_title": "AI Path Planning, AI Stable Hook, AI Collision Avoidance—Significantly Improving Site Safety and Construction Efficiency"
+      },
+      "4S : Site Safety System": {
+        "name": "4S : Site Safety System",
+        "stat1_value": "100%",
+        "stat1_desc": "Build a secure future: 4S smart site guardian",
+        "stat2_value": "10+",
+        "stat2_desc": "Multi-project centralized deployment, improving site safety management efficiency.",
+        "products_label": "Related Products",
+        "featured_title": "Leading the new era of safety: 4S smart site system"
+      }
+    }
+  },
+  "youtube": {
+    "loading": "Loading YouTube video...",
+    "loading_desc": "If the current network restricts access to YouTube, the video may not play."
+  }
+}
