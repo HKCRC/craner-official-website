@@ -33,11 +33,11 @@ export const Footer = () => {
           <div className="flex flex-col text-xs text-left gap-1 text-black">
             <div className="grid grid-cols-2 gap-1 text-black">
               <p>{t("footer.company_name")}</p>
-              <p className="text-black"> 智慧塔吊解决方案</p>
-              <p className="text-black"> CMP</p>
-              <p className="text-black"> DWSS</p>
-              <p className="text-black"> 4S智慧工地系统</p>
-              <p className="text-black"> 智慧工地定制化解决方案</p>
+              <p className="text-black"> {t("footer.business1")}</p>
+              <p className="text-black"> {t("footer.business2")}</p>
+              <p className="text-black"> {t("footer.business3")}</p>
+              <p className="text-black"> {t("footer.business4")}</p>
+              <p className="text-black"> {t("footer.business5")}</p>
             </div>
             <p className="mb-4 mt-2 font-bold">{t("lite.desc")}</p>
             <p>{t("footer.address")}</p>
