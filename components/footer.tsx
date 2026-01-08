@@ -13,7 +13,7 @@ export const Footer = () => {
 
   return (
     <MotionRevealUp delay={0.2}>
-      <div className="w-full relative h-[30rem] md:h-[20rem] pb-16 flex flex-col md:flex-row items-start justify-between bg-[#f8f9fc] overflow-hidden">
+      <div className="w-full relative h-[30rem] md:h-[23rem] pb-16 flex flex-col md:flex-row items-start justify-between bg-[#f8f9fc] overflow-hidden">
         <Image
           className="absolute bottom-0 left-0 z-10"
           src="/bg.svg"
@@ -21,7 +21,7 @@ export const Footer = () => {
           width={450}
           height={50}
         />
-        <div className="footer-left flex flex-col items-start justify-start pl-6 md:pl-24">
+        <div className="footer-left flex w-[95%] lg:w-auto flex-col items-start justify-start pl-6 md:pl-24">
           <Image
             className="mt-12 mb-2 ml-[-20px]"
             src="/img/logo.png"
@@ -31,8 +31,15 @@ export const Footer = () => {
           />
 
           <div className="flex flex-col text-xs text-left gap-1 text-black">
-            <p>{t("footer.company_name")}</p>
-            <p className="mb-4">{t("lite.desc")}</p>
+            <div className="grid grid-cols-2 gap-1 text-black">
+              <p>{t("footer.company_name")}</p>
+              <p className="text-black"> 智慧塔吊解决方案</p>
+              <p className="text-black"> CMP</p>
+              <p className="text-black"> DWSS</p>
+              <p className="text-black"> 4S智慧工地系统</p>
+              <p className="text-black"> 智慧工地定制化解决方案</p>
+            </div>
+            <p className="mb-4 mt-2 font-bold">{t("lite.desc")}</p>
             <p>{t("footer.address")}</p>
             <p>{t("footer.address2")}</p>
             <p>{t("footer.contact")}</p>
