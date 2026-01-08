@@ -62,7 +62,7 @@ export const BusinessBox = () => {
                 </p>
                 <div className="mt-auto opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
                   <a
-                    href="#"
+                    href="https://ncnd27zbzpqm.feishu.cn/share/base/form/shrcna3DVeWa4aT72cjiAZF7v9c"
                     className="text-blue-600 font-bold flex items-center gap-2 group/link"
                   >
                     {t("business_box.learn_more")}
@@ -207,7 +207,7 @@ export const BusinessBox = () => {
                 </p>
                 <div className="mt-auto opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
                   <a
-                    href="#"
+                    href="https://ncnd27zbzpqm.feishu.cn/share/base/form/shrcna3DVeWa4aT72cjiAZF7v9c"
                     className="text-blue-600 font-bold flex items-center gap-2 group/link"
                   >
                     {t("business_box.learn_more")}
