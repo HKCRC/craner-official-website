@@ -46,6 +46,18 @@ export const SEO_CONFIG = {
   // Keywords by language
   keywords: {
     en: [
+      // CraneR Brand Keywords
+      'CraneR',
+      'CraneR Technology',
+      'CraneR HK',
+      'CraneR Hong Kong',
+      'craner.hk',
+      'CraneR AI crane',
+      'CraneR tower crane system',
+      'CraneR intelligent crane',
+      'CraneR construction technology',
+      'CraneR unmanned crane',
+      // Core Technology Keywords
       'intelligent construction',
       'AI crane system',
       'construction technology',
@@ -64,9 +76,15 @@ export const SEO_CONFIG = {
       'smart tower crane Hong Kong',
       'AI construction Hong Kong',
       'Hong Kong Centre for Construction Robotics',
-      'CraneR Technology',
       'remote crane operation',
       'crane automation system',
+      // Additional Brand & Location Keywords
+      'Hong Kong smart crane',
+      'HK construction AI',
+      'Hong Kong Science Park startup',
+      'AI tower crane Hong Kong',
+      'intelligent construction Hong Kong',
+      'construction tech startup HK',
     ],
     zh: [
       '智能建造',
@@ -144,6 +162,14 @@ export const ARTICLE_SEO = {
   // 文章特定关键词
   articleKeywords: {
     en: [
+      // CraneR Brand
+      'CraneR',
+      'CraneR Technology',
+      'CraneR HK',
+      'CraneR Hong Kong',
+      'CraneR AI crane system',
+      'CraneR tower crane',
+      // Core Keywords
       'AI tower crane',
       'smart tower crane',
       'unmanned tower crane',
@@ -159,6 +185,11 @@ export const ARTICLE_SEO = {
       'construction safety innovation',
       'remote crane control',
       'intelligent construction Hong Kong',
+      // Additional Keywords
+      'autonomous tower crane Hong Kong',
+      'AI crane Hong Kong',
+      'smart construction HK',
+      'Hong Kong Housing Authority AI',
     ],
     zh: [
       'AI塔吊',
@@ -242,7 +273,10 @@ export const generateArticleSchema = (article: {
       { '@type': 'Thing', name: 'AI Tower Crane' },
       { '@type': 'Thing', name: 'Smart Construction' },
       { '@type': 'Thing', name: 'Hong Kong Construction Technology' },
+      { '@type': 'Thing', name: 'Unmanned Tower Crane' },
       { '@type': 'Organization', name: 'HKCRC' },
+      { '@type': 'Organization', name: 'CraneR Technology' },
+      { '@type': 'Organization', name: 'InnoHK' },
     ],
   };
 };
@@ -256,9 +290,19 @@ export const generateOrganizationSchema = () => {
     '@type': 'Organization',
     name: organization.name,
     legalName: organization.legalName,
+    alternateName: ['CraneR', 'CraneR HK', 'CraneR Technology', '可越科技'],
     url: siteUrl,
     logo: organization.logo,
     foundingDate: organization.foundingDate,
+    description: 'CraneR Technology is a Hong Kong-based high-tech company specializing in AI tower crane systems, intelligent construction, and unmanned crane technology. Developed in collaboration with HKCRC (Hong Kong Centre for Construction Robotics) under InnoHK.',
+    slogan: 'Intelligent Construction, Safer Tomorrow',
+    knowsAbout: [
+      'AI Tower Crane',
+      'Intelligent Construction',
+      'Unmanned Tower Crane',
+      'Construction Automation',
+      'Smart Construction Technology',
+    ],
     address: [
       {
         '@type': 'PostalAddress',
@@ -274,6 +318,15 @@ export const generateOrganizationSchema = () => {
       ...organization.contactPoint,
     },
     sameAs: [],
+    memberOf: {
+      '@type': 'Organization',
+      name: 'Hong Kong Centre for Construction Robotics (HKCRC)',
+      url: 'https://hkcrc.hk',
+    },
+    parentOrganization: {
+      '@type': 'Organization',
+      name: 'InnoHK',
+    },
   };
 };
 
@@ -302,22 +355,35 @@ export const generateLocalBusinessSchema = () => {
     '@context': 'https://schema.org',
     '@type': 'TechnologyCompany',
     name: organization.name,
+    alternateName: ['CraneR', 'CraneR HK', 'CraneR Technology', '可越科技'],
     url: siteUrl,
     logo: organization.logo,
     image: organization.logo,
-    description: 'CraneR Technology is a pioneering high-tech company specializing in intelligent construction engineering machinery, integrating AI, IoT, and automated control systems.',
+    description: 'CraneR Technology (craner.hk) is a Hong Kong-based pioneering high-tech company specializing in AI tower crane systems, unmanned tower crane technology, and intelligent construction machinery. Developed in collaboration with HKCRC under InnoHK, CraneR integrates AI, IoT, and automated control systems for smart construction.',
     address: {
       '@type': 'PostalAddress',
       ...organization.address.hk,
     },
     telephone: organization.contactPoint.telephone,
     priceRange: '$$$$',
-    areaServed: ['Hong Kong', 'China', 'Asia Pacific'],
+    areaServed: ['Hong Kong', 'China', 'Asia Pacific', 'Greater Bay Area'],
     serviceType: [
+      'AI Tower Crane Systems',
+      'Unmanned Tower Crane Technology',
       'Intelligent Construction Machinery',
-      'AI Safety Systems',
+      'AI Safety Monitoring Systems',
       'Construction Automation',
-      'Tower Crane AI Systems',
+      'Remote Crane Control Systems',
+      'Smart Construction Solutions',
+    ],
+    keywords: 'CraneR, CraneR HK, CraneR Technology, AI tower crane, unmanned tower crane, intelligent construction, HKCRC, Hong Kong construction tech, smart crane Hong Kong',
+    knowsAbout: [
+      'AI Tower Crane',
+      'Unmanned Tower Crane',
+      'Intelligent Construction',
+      'Construction Robotics',
+      'HKCRC',
+      'InnoHK',
     ],
   };
 };

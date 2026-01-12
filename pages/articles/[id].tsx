@@ -58,12 +58,34 @@ export default function Article({ id }: ArticleProps) {
   // 生成 canonical URL
   const canonicalUrl = `${SEO_CONFIG.siteUrl}/articles/${id}?lang=${locale}`;
 
+  // 根据语言生成 SEO 标题
+  const getPageTitle = () => {
+    if (locale === "en") {
+      return `${article.title} | CraneR HK - AI Tower Crane & Intelligent Construction`;
+    } else if (locale === "zh") {
+      return `${article.title} | CraneR可越科技 - 香港智能塔吊 无人塔吊 HKCRC`;
+    } else {
+      return `${article.title} | CraneR可越科技 - 香港智能天秤 無人天秤 HKCRC`;
+    }
+  };
+
+  // 根据语言生成 SEO 描述
+  const getMetaDescription = () => {
+    if (locale === "en") {
+      return `${article.subtitle} CraneR Technology Hong Kong - Leading AI tower crane and unmanned crane solutions. HKCRC InnoHK partner.`;
+    } else if (locale === "zh") {
+      return `${article.subtitle} CraneR可越科技香港 - 领先的AI智能塔吊、无人塔吊解决方案。HKCRC香港智能建造研发中心合作伙伴。`;
+    } else {
+      return `${article.subtitle} CraneR可越科技香港 - 領先的AI智能天秤、無人天秤解決方案。HKCRC香港智能建造研發中心合作夥伴。`;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <Head>
         {/* 基础 Meta 标签 */}
-        <title>{article.title} | CraneR Technology - 香港智能塔吊 HKCRC</title>
-        <meta name="description" content={article.subtitle} />
+        <title>{getPageTitle()}</title>
+        <meta name="description" content={getMetaDescription()} />
         <meta name="keywords" content={allKeywords} />
 
         {/* Canonical URL */}
@@ -94,13 +116,13 @@ export default function Article({ id }: ArticleProps) {
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="article" />
         <meta property="og:url" content={canonicalUrl} />
-        <meta property="og:title" content={article.title} />
-        <meta property="og:description" content={article.subtitle} />
+        <meta property="og:title" content={getPageTitle()} />
+        <meta property="og:description" content={getMetaDescription()} />
         <meta
           property="og:image"
           content={`${SEO_CONFIG.siteUrl}${article.coverImage}`}
         />
-        <meta property="og:site_name" content="CraneR Technology" />
+        <meta property="og:site_name" content="CraneR Technology - CraneR HK" />
         <meta
           property="og:locale"
           content={
@@ -118,23 +140,30 @@ export default function Article({ id }: ArticleProps) {
         <meta property="article:tag" content="HKCRC" />
         <meta property="article:tag" content="香港智能建造" />
         <meta property="article:tag" content="无人塔吊" />
+        <meta property="article:tag" content="CraneR" />
+        <meta property="article:tag" content="CraneR HK" />
+        <meta property="article:tag" content="CraneR Technology" />
+        <meta property="article:tag" content="unmanned tower crane" />
+        <meta property="article:tag" content="smart tower crane Hong Kong" />
 
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:url" content={canonicalUrl} />
-        <meta name="twitter:title" content={article.title} />
-        <meta name="twitter:description" content={article.subtitle} />
+        <meta name="twitter:title" content={getPageTitle()} />
+        <meta name="twitter:description" content={getMetaDescription()} />
         <meta
           name="twitter:image"
           content={`${SEO_CONFIG.siteUrl}${article.coverImage}`}
         />
+        <meta name="twitter:site" content="@CraneRTech" />
+        <meta name="twitter:creator" content="@CraneRTech" />
 
         {/* 额外 SEO 标签 */}
         <meta
           name="robots"
           content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
         />
-        <meta name="author" content="CraneR Technology - HKCRC" />
+        <meta name="author" content="CraneR Technology - CraneR HK - HKCRC" />
         <meta name="geo.region" content="HK" />
         <meta name="geo.placename" content="Hong Kong" />
 
