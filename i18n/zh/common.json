@@ -162,5 +162,8 @@
   "youtube": {
     "loading": "正在加载 YouTube 视频...",
     "loading_desc": "如果当前网络限制访问 YouTube，视频可能无法播放"
+  },
+  "articles": {
+    "back": "返回"
   }
 }

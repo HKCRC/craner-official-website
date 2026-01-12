@@ -162,5 +162,8 @@
   "youtube": {
     "loading": "Loading YouTube video...",
     "loading_desc": "If the current network restricts access to YouTube, the video may not play."
+  },
+  "articles": {
+    "back": "Back"
   }
 }

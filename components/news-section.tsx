@@ -1,17 +1,13 @@
 import { useTranslation } from "next-export-i18n";
-import { TextBlockRow, TextGradient, getTextGradientStyle } from "./text-block";
-import styles from "@/styles/cooperative.module.css";
 import { MotionRevealUp } from "./animated-text";
 import { LazyImage } from "./lazy-image";
-
-const subtitleGradient1: TextGradient = {
-  deg: 180,
-  from: "#25FFBE",
-  to: "#34C2FF",
-};
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 export const NewsSection = () => {
   const { t } = useTranslation();
+  const router = useRouter();
+  const locale = (router.query.lang as string) || "zh-HK";
 
   return (
     <section className="w-full bg-white py-20 px-6 md:px-0">
@@ -30,8 +26,8 @@ export const NewsSection = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* News Item 1 */}
           <MotionRevealUp delay={0.1}>
-            <a
-              href="javascript:void(0)"
+            <Link
+              href={`/articles/1?lang=${locale}`}
               className="group flex flex-col md:flex-row items-stretch bg-slate-50 hover:bg-white hover:shadow-xl transition-all duration-500 rounded-3xl overflow-hidden border border-slate-100"
             >
               {/* Text Content - Left Side */}
@@ -62,13 +58,13 @@ export const NewsSection = () => {
                   />
                 </div>
               </div>
-            </a>
+            </Link>
           </MotionRevealUp>
 
           {/* News Item 2 */}
           <MotionRevealUp delay={0.2}>
-            <a
-              href="javascript:void(0)"
+            <Link
+              href={`/articles/2?lang=${locale}`}
               className="group flex flex-col md:flex-row items-stretch bg-slate-50 hover:bg-white hover:shadow-xl transition-all duration-500 rounded-3xl overflow-hidden border border-slate-100"
             >
               {/* Text Content - Left Side */}
@@ -99,7 +95,7 @@ export const NewsSection = () => {
                   />
                 </div>
               </div>
-            </a>
+            </Link>
           </MotionRevealUp>
         </div>
       </div>

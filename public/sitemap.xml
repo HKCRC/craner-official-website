@@ -6,9 +6,10 @@
       xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
+<!-- Homepage -->
 <url>
   <loc>https://craner.hk/</loc>
-  <lastmod>2026-01-08T00:00:00+08:00</lastmod>
+  <lastmod>2026-01-12T00:00:00+08:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>1.0</priority>
   <xhtml:link rel="alternate" hreflang="en" href="https://craner.hk/?lang=en"/>
@@ -16,6 +17,30 @@
   <xhtml:link rel="alternate" hreflang="zh-HK" href="https://craner.hk/?lang=zh-HK"/>
   <xhtml:link rel="alternate" hreflang="zh-TW" href="https://craner.hk/?lang=zh-TW"/>
   <xhtml:link rel="alternate" hreflang="x-default" href="https://craner.hk/"/>
+</url>
+
+<!-- Article 1: AI Tower Crane System in Pak Tin Estate -->
+<url>
+  <loc>https://craner.hk/articles/1</loc>
+  <lastmod>2025-10-30T00:00:00+08:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+  <xhtml:link rel="alternate" hreflang="en" href="https://craner.hk/articles/1?lang=en"/>
+  <xhtml:link rel="alternate" hreflang="zh" href="https://craner.hk/articles/1?lang=zh"/>
+  <xhtml:link rel="alternate" hreflang="zh-HK" href="https://craner.hk/articles/1?lang=zh-HK"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="https://craner.hk/articles/1"/>
+</url>
+
+<!-- Article 2: Housing Authority AI Tower Crane -->
+<url>
+  <loc>https://craner.hk/articles/2</loc>
+  <lastmod>2025-10-30T00:00:00+08:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+  <xhtml:link rel="alternate" hreflang="en" href="https://craner.hk/articles/2?lang=en"/>
+  <xhtml:link rel="alternate" hreflang="zh" href="https://craner.hk/articles/2?lang=zh"/>
+  <xhtml:link rel="alternate" hreflang="zh-HK" href="https://craner.hk/articles/2?lang=zh-HK"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="https://craner.hk/articles/2"/>
 </url>
 
 </urlset>

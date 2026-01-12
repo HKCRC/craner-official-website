@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { useIsCN } from "@/scripts/utils";
 import { useTranslation } from "next-export-i18n";
 import { businessEmail } from "@/constants";
+import Link from "next/link";
 
 const ENDPOINT =
   "https://env-1gy344xr89dc3a71-1251089768.ap-shanghai.app.tcloudbase.com/submit";
@@ -366,13 +367,9 @@ export default function WaitingListForm({ onClose }: { onClose: () => void }) {
             <p>+86 13926508390</p>
             <p>+852 64876758</p>
 
-            <button
-              onClick={() =>
-                window.open(
-                  "https://ncnd27zbzpqm.feishu.cn/share/base/form/shrcna3DVeWa4aT72cjiAZF7v9c",
-                  "_blank"
-                )
-              }
+            <Link
+              href="https://ncnd27zbzpqm.feishu.cn/share/base/form/shrcna3DVeWa4aT72cjiAZF7v9c"
+              target="_blank"
               className="btn btn-success mt-4 mx-3 hover:bg-green-600 border-black hover:border-black"
             >
               <svg
@@ -389,7 +386,7 @@ export default function WaitingListForm({ onClose }: { onClose: () => void }) {
               </svg>
 
               <p className="ml-2">{t("form.business_opportunities")}</p>
-            </button>
+            </Link>
           </div>
         </motion.div>
       </div>
