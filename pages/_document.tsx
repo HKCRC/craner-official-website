@@ -1,9 +1,28 @@
 import { Html, Head, Main, NextScript } from "next/document";
 
+// Google Analytics Measurement ID
+const GA_MEASUREMENT_ID = "G-N2ZNCLVV87";
+
 export default function Document() {
   return (
     <Html lang="en" dir="ltr">
       <Head>
+        {/* Google Analytics (gtag.js) */}
+        <script
+          async
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${GA_MEASUREMENT_ID}');
+            `,
+          }}
+        />
+
         {/* Preconnect to important domains for performance */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
