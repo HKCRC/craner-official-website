@@ -23,6 +23,9 @@ export default function Article({ id }: ArticleProps) {
   const locale = (router.query.lang as string) || "zh-HK";
 
   const findMatchArticle = (id: string) => {
+    if (locale.indexOf("zh-TW") !== -1) {
+      return articles[id]["zh-HK"];
+    }
     return articles[id][locale as "zh" | "en" | "zh-HK"];
   };
 
