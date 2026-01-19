@@ -145,6 +145,15 @@ export default function Article({ id }: ArticleProps) {
         <meta property="article:tag" content="CraneR Technology" />
         <meta property="article:tag" content="unmanned tower crane" />
         <meta property="article:tag" content="smart tower crane Hong Kong" />
+        {/* User Requested SEO Keywords */}
+        <meta property="article:tag" content="crane AI" />
+        <meta property="article:tag" content="AI crane" />
+        <meta property="article:tag" content="smart crane" />
+        <meta property="article:tag" content="香港智能ai" />
+        <meta property="article:tag" content="香港hkcrc" />
+        <meta property="article:tag" content="crc天秤" />
+        <meta property="article:tag" content="智慧天秤" />
+        <meta property="article:tag" content="智慧ai天秤" />
 
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { useTranslation } from "next-export-i18n";
@@ -9,20 +9,83 @@ interface StackedCarouselProps {
     alt: string;
     label: string;
   }[];
+  autoPlayInterval?: number; // 自动播放间隔（毫秒），默认 3000ms
 }
 
 export const StackedCardCarousel: React.FC<StackedCarouselProps> = ({
   images,
+  autoPlayInterval = 3000,
 }) => {
   const [index, setIndex] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const { t } = useTranslation();
-  const nextCard = (e: React.MouseEvent) => {
-    e.stopPropagation();
+
+  const nextCard = (e?: React.MouseEvent) => {
+    if (e) {
+      e.stopPropagation();
+    }
     setIndex((prev) => (prev + 1) % images.length);
   };
 
+  // 使用 Intersection Observer 检测组件是否在视野内
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          setIsVisible(entry.isIntersecting);
+        });
+      },
+      {
+        threshold: 0.3, // 当30%的组件进入视野时触发
+        rootMargin: "0px",
+      }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => {
+      if (containerRef.current) {
+        observer.unobserve(containerRef.current);
+      }
+    };
+  }, []);
+
+  // 当组件在视野内时，自动轮播
+  useEffect(() => {
+    if (isVisible && images.length > 0) {
+      // 清除之前的定时器
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+      // 设置新的自动播放定时器
+      intervalRef.current = setInterval(() => {
+        setIndex((prev) => (prev + 1) % images.length);
+      }, autoPlayInterval);
+    } else {
+      // 离开视野时清除定时器
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    }
+
+    // 清理函数
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [isVisible, autoPlayInterval, images.length]);
+
   return (
-    <div className="relative w-full h-[400px] md:h-[550px] flex items-center justify-center">
+    <div
+      ref={containerRef}
+      className="relative w-full h-[400px] md:h-[550px] flex items-center justify-center"
+    >
       <div
         className="relative w-full max-w-[500px] h-[350px] md:h-[450px] cursor-pointer"
         onClick={nextCard}
