@@ -3,101 +3,135 @@ import { MotionRevealUp } from "./animated-text";
 import { LazyImage } from "./lazy-image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { articles } from "@/constants/articles";
+
+const PREVIEW_COUNT = 4;
 
 export const NewsSection = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const locale = (router.query.lang as string) || "zh-HK";
 
+  const articleEntries = Object.entries(articles)
+    .slice(0, PREVIEW_COUNT)
+    .map(([id, langs]) => {
+      const data =
+        langs[locale as "zh" | "en" | "zh-HK"] ||
+        langs["zh-HK"] ||
+        Object.values(langs)[0];
+      return { id, ...data };
+    });
+
   return (
-    <section className="w-full bg-white py-20 px-6 md:px-0">
+    <section className="w-full bg-white py-16 px-6 md:px-0">
       <div className="max-w-6xl mx-auto">
-        <div className="mb-12">
-          <MotionRevealUp className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 tracking-tight">
-            {t("news_sections.title")}
-          </MotionRevealUp>
-          <div className="text-lg text-gray-600 max-w-3xl leading-relaxed">
-            <MotionRevealUp delay={0.3}>
-              {t("news_sections.subtitle")}
+
+        {/* Header row */}
+        <div className="flex items-end justify-between mb-10">
+          <div>
+            <MotionRevealUp>
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-8 h-px bg-blue-300" />
+                <span className="text-blue-600 font-bold text-sm uppercase tracking-[0.2em]">
+                  最新動態
+                </span>
+              </div>
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight">
+                {t("news_sections.title")}
+              </h2>
             </MotionRevealUp>
           </div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* News Item 1 */}
           <MotionRevealUp delay={0.1}>
             <Link
-              href={`/articles/1?lang=${locale}`}
-              className="group flex flex-col md:flex-row items-stretch bg-slate-50 hover:bg-white hover:shadow-xl transition-all duration-500 rounded-3xl overflow-hidden border border-slate-100"
+              href={`/articles?lang=${locale}`}
+              className="group inline-flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors flex-shrink-0 mb-1"
             >
-              {/* Text Content - Left Side */}
-              <div className="flex flex-col justify-between p-8 md:w-3/5 order-2 md:order-1">
-                <div>
-                  <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-4 line-clamp-2 group-hover:text-blue-600 transition-colors">
-                    {t("news_sections.news_1_title")}
-                  </h3>
-                  <p className="text-sm lg:text-base text-gray-500 font-light line-clamp-3 mb-6 leading-relaxed">
-                    {t("news_sections.news_1_subtitle")}
-                  </p>
-                </div>
-
-                <div className="flex items-center text-xs font-bold text-slate-400 uppercase tracking-wider">
-                  <span>{t("news_sections.author")}</span>
-                  <span className="mx-3 opacity-30">•</span>
-                  <span>2025/12/20</span>
-                </div>
-              </div>
-
-              {/* Image - Right Side */}
-              <div className="md:w-2/5 order-1 md:order-2 overflow-hidden">
-                <div className="w-full h-full aspect-[16/9] md:aspect-auto">
-                  <LazyImage
-                    src="./img/news/new01_cover.jpg"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    alt="news 1"
-                  />
-                </div>
-              </div>
-            </Link>
-          </MotionRevealUp>
-
-          {/* News Item 2 */}
-          <MotionRevealUp delay={0.2}>
-            <Link
-              href={`/articles/2?lang=${locale}`}
-              className="group flex flex-col md:flex-row items-stretch bg-slate-50 hover:bg-white hover:shadow-xl transition-all duration-500 rounded-3xl overflow-hidden border border-slate-100"
-            >
-              {/* Text Content - Left Side */}
-              <div className="flex flex-col justify-between p-8 md:w-3/5 order-2 md:order-1">
-                <div>
-                  <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-4 line-clamp-2 group-hover:text-blue-600 transition-colors">
-                    {t("news_sections.news_2_title")}
-                  </h3>
-                  <p className="text-sm lg:text-base text-gray-500 font-light line-clamp-3 mb-6 leading-relaxed">
-                    {t("news_sections.news_2_subtitle")}
-                  </p>
-                </div>
-
-                <div className="flex items-center text-xs font-bold text-slate-400 uppercase tracking-wider">
-                  <span>{t("news_sections.author")}</span>
-                  <span className="mx-3 opacity-30">•</span>
-                  <span>2025/12/20</span>
-                </div>
-              </div>
-
-              {/* Image - Right Side */}
-              <div className="md:w-2/5 order-1 md:order-2 overflow-hidden">
-                <div className="w-full h-full aspect-[16/9] md:aspect-auto">
-                  <LazyImage
-                    src="./img/news/new02_cover.jpeg"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    alt="news 2"
-                  />
-                </div>
-              </div>
+              查看更多
+              <svg
+                className="w-4 h-4 transition-transform group-hover:translate-x-0.5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
             </Link>
           </MotionRevealUp>
         </div>
+
+        {/* Featured first article */}
+        {articleEntries[0] && (
+          <MotionRevealUp delay={0.05}>
+            <Link
+              href={`/articles/${articleEntries[0].id}?lang=${locale}`}
+              className="group flex flex-col md:flex-row gap-0 bg-slate-50 hover:bg-white hover:shadow-lg transition-all duration-400 rounded-2xl overflow-hidden border border-slate-100 mb-4"
+            >
+              <div className="md:w-2/5 overflow-hidden flex-shrink-0">
+                <div className="w-full h-52 md:h-full">
+                  <LazyImage
+                    src={articleEntries[0].coverImage}
+                    alt={articleEntries[0].title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+              </div>
+              <div className="flex flex-col justify-between p-6 md:p-8 flex-1">
+                <div>
+                  {articleEntries[0].tags && (
+                    <div className="flex flex-wrap gap-1.5 mb-3">
+                      {articleEntries[0].tags.slice(0, 3).map((tag) => (
+                        <span
+                          key={tag}
+                          className="text-xs px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 font-medium"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors leading-snug">
+                    {articleEntries[0].title}
+                  </h3>
+                  <p className="text-sm text-gray-500 line-clamp-2 leading-relaxed">
+                    {articleEntries[0].subtitle}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 mt-4 text-xs text-slate-400 font-medium">
+                  <span>{t("news_sections.author")}</span>
+                  <span className="opacity-40">•</span>
+                  <span>{articleEntries[0].date}</span>
+                </div>
+              </div>
+            </Link>
+          </MotionRevealUp>
+        )}
+
+        {/* Compact list for remaining articles */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          {articleEntries.slice(1).map((article, idx) => (
+            <MotionRevealUp key={article.id} delay={0.08 * (idx + 1)}>
+              <Link
+                href={`/articles/${article.id}?lang=${locale}`}
+                className="group flex gap-4 items-center bg-slate-50 hover:bg-white hover:shadow-md transition-all duration-300 rounded-xl overflow-hidden border border-slate-100 p-3"
+              >
+                <div className="w-20 h-16 rounded-lg overflow-hidden flex-shrink-0">
+                  <LazyImage
+                    src={article.coverImage}
+                    alt={article.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-sm font-semibold text-gray-800 line-clamp-2 group-hover:text-blue-600 transition-colors leading-snug mb-1.5">
+                    {article.title}
+                  </h4>
+                  <p className="text-xs text-slate-400">{article.date}</p>
+                </div>
+              </Link>
+            </MotionRevealUp>
+          ))}
+        </div>
+
       </div>
     </section>
   );

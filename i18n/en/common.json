@@ -165,5 +165,15 @@
   },
   "articles": {
     "back": "Back"
+  },
+  "cases_section": {
+    "title": "Collaboration Success Cases",
+    "subtitle": "We partner with government departments, statutory bodies, and research institutions to bring cutting-edge intelligent construction technology to real engineering projects.",
+    "view_more": "View All Cases",
+    "archive_label": "Collaboration Cases",
+    "archive_title": "Success Collaboration Cases",
+    "archive_subtitle": "Explore CraneR Technology's joint practices and innovation outcomes with partners in the smart construction field.",
+    "back_home": "Back to Home",
+    "back_cases": "Back to Cases"
   }
 }

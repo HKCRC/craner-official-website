@@ -165,5 +165,15 @@
   },
   "articles": {
     "back": "返回"
+  },
+  "cases_section": {
+    "title": "合作成功案例",
+    "subtitle": "我们与政府部门、法定机构及科研机构携手合作，将前沿智能建造技术落地应用于真实工程项目。",
+    "view_more": "查看全部案例",
+    "archive_label": "合作案例",
+    "archive_title": "成功合作案例",
+    "archive_subtitle": "探索可越科技与各方合作伙伴在智能建造领域的联合实践与创新成果。",
+    "back_home": "返回主页",
+    "back_cases": "返回案例列表"
   }
 }

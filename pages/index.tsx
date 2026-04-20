@@ -4,12 +4,10 @@ import { useTranslation } from "next-export-i18n";
 import { Outfit } from "next/font/google";
 import { useEffect } from "react";
 import { VideoIntro } from "@/components/video-intro";
-import { FeatureBox } from "@/components/feature-box";
-import { PathPlanningBox } from "@/components/path-planning-box";
-import { AISafetyBox } from "@/components/ai-safety-box";
+import { ProductMatrix } from "@/components/product-matrix";
 import { NewsSection } from "@/components/news-section";
 import { ParallaxSection } from "@/components/parallax-section";
-import { BusinessBox } from "@/components/business-box";
+import { CasesSection } from "@/components/cases-section";
 import { CooperativePartner } from "@/components/cooperative-partner-list";
 import { BusinessSwiper } from "@/components/business-swiper";
 import { Header } from "@/components/header";
@@ -38,25 +36,11 @@ export default function Lite() {
 
       <Header />
 
-      <div className="relative overflow-hidden">
-        <FeatureBox />
-
-        <div className="max-w-6xl mx-auto px-6 md:px-0">
-          <div className="w-full h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent"></div>
-        </div>
-
-        <PathPlanningBox />
-
-        <div className="max-w-6xl mx-auto px-6 md:px-0">
-          <div className="w-full h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent"></div>
-        </div>
-
-        <AISafetyBox />
-      </div>
+      <ProductMatrix />
 
       <VideoIntro />
 
-      <BusinessBox />
+      <CasesSection />
 
       <BusinessSwiper />
 
