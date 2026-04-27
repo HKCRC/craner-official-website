@@ -10,8 +10,7 @@ export interface CaseData {
   coverImage: string;
   date: string;
   content: string;
-  partner?: string;
-  partnerType?: string;
+  partners?: string[];
   industry?: string;
   tags?: string[];
   sections?: CaseSection[];
@@ -24,8 +23,7 @@ export const cases: Record<string, Record<string | "zh" | "en" | "zh-HK", CaseDa
       subtitle: "与香港房屋署合作，在白田邨13期公营房屋重建项目中成功落地AI天秤系统，实现施工安全与效率的双重提升，标志着政府与科研机构协同推动建造业智能转型的重要里程碑。",
       coverImage: "/img/news/new01_cover.jpg",
       date: "2025/10/30",
-      partner: "香港房屋署",
-      partnerType: "政府部门",
+      partners: ["香港房屋署","香港房屋委员会"],
       industry: "公营房屋",
       tags: ["AI天秤", "智能建造", "HKCRC", "InnoHK"],
       sections: [
@@ -50,8 +48,7 @@ export const cases: Record<string, Record<string | "zh" | "en" | "zh-HK", CaseDa
       subtitle: "In collaboration with the Hong Kong Housing Authority, the AI Tower Crane System was successfully deployed in the Pak Tin Estate Phase 13 public housing redevelopment project, achieving dual improvements in construction safety and efficiency—marking a significant milestone in government-research collaboration for smart construction transformation.",
       coverImage: "/img/news/new01_cover.jpg",
       date: "2025/10/30",
-      partner: "Hong Kong Housing Authority",
-      partnerType: "Government Department",
+      partners: ["Hong Kong Housing Authority","Hong Kong Housing Commission"],
       industry: "Public Housing",
       tags: ["AI Tower Crane", "Smart Construction", "HKCRC", "InnoHK"],
       sections: [
@@ -76,8 +73,7 @@ export const cases: Record<string, Record<string | "zh" | "en" | "zh-HK", CaseDa
       subtitle: "與香港房屋署合作，在白田邨13期公營房屋重建項目中成功落地AI天秤系統，實現施工安全與效率的雙重提升，標誌著政府與科研機構協同推動建造業智能轉型的重要里程碑。",
       coverImage: "/img/news/new01_cover.jpg",
       date: "2025/10/30",
-      partner: "香港房屋署",
-      partnerType: "政府部門",
+      partners: ["香港房屋署","香港房屋委员会"],
       industry: "公營房屋",
       tags: ["AI天秤", "智能建造", "HKCRC", "InnoHK"],
       sections: [
@@ -104,8 +100,7 @@ export const cases: Record<string, Record<string | "zh" | "en" | "zh-HK", CaseDa
       subtitle: "与香港房屋委员会深度合作，在白田邨重建工程中联合研发并应用AI天秤系统，共同申请相关技术专利，探索将智能建造技术标准化、规模化应用于香港公营房屋工程的可行路径。",
       coverImage: "/img/news/new02_cover.jpeg",
       date: "2025/10/30",
-      partner: "香港房屋委员会",
-      partnerType: "法定机构",
+      partners: ["香港房屋委员会","InnoHK / HKCRC"],
       industry: "建筑与房屋",
       tags: ["AI塔吊", "联合研发", "专利申请", "智慧工地"],
       sections: [
@@ -130,8 +125,7 @@ export const cases: Record<string, Record<string | "zh" | "en" | "zh-HK", CaseDa
       subtitle: "Through deep collaboration with the Hong Kong Housing Authority, the AI Tower Crane System was jointly developed and deployed at the Pak Tin Estate redevelopment project. Joint patent applications are underway to explore a standardized and scalable pathway for applying intelligent construction technologies in Hong Kong's public housing projects.",
       coverImage: "/img/news/new02_cover.jpeg",
       date: "2025/10/30",
-      partner: "Hong Kong Housing Authority",
-      partnerType: "Statutory Body",
+      partners: ["Hong Kong Housing Authority","InnoHK / HKCRC"],
       industry: "Construction & Housing",
       tags: ["AI Tower Crane", "Joint R&D", "Patent Application", "Smart Site"],
       sections: [
@@ -156,8 +150,7 @@ export const cases: Record<string, Record<string | "zh" | "en" | "zh-HK", CaseDa
       subtitle: "與香港房屋委員會深度合作，在白田邨重建工程中聯合研發並應用AI天秤系統，共同申請相關技術專利，探索將智能建造技術標準化、規模化應用於香港公營房屋工程的可行路徑。",
       coverImage: "/img/news/new02_cover.jpeg",
       date: "2025/10/30",
-      partner: "香港房屋委員會",
-      partnerType: "法定機構",
+      partners: ["香港房屋委員會","InnoHK / HKCRC"],
       industry: "建築與房屋",
       tags: ["AI天秤", "聯合研發", "專利申請", "智慧地盤"],
       sections: [
@@ -184,8 +177,7 @@ export const cases: Record<string, Record<string | "zh" | "en" | "zh-HK", CaseDa
       subtitle: "作为InnoHK创新香港研发平台的重要成员，HKCRC CraneR团队持续深化与国际顶尖科研机构的产学研合作，将前沿AI研究成果转化为可实际落地的工程解决方案，推动香港建造业创新生态体系的形成。",
       coverImage: "/img/feature/f1.jpg",
       date: "2025/06/01",
-      partner: "InnoHK / HKCRC",
-      partnerType: "科研机构",
+      partners: ["InnoHK","HKCRC"],
       industry: "科技研发",
       tags: ["InnoHK", "产学研", "AI研发", "香港科学园"],
       sections: [
@@ -210,8 +202,7 @@ export const cases: Record<string, Record<string | "zh" | "en" | "zh-HK", CaseDa
       subtitle: "As a key member of the InnoHK Innovation Hong Kong Research and Development Platform, the HKCRC CraneR team continuously deepens its industry-academia-research collaboration with top international research institutions, transforming cutting-edge AI research results into practical engineering solutions and driving the formation of an innovative ecosystem for Hong Kong's construction industry.",
       coverImage: "/img/feature/f1.jpg",
       date: "2025/06/01",
-      partner: "InnoHK / HKCRC",
-      partnerType: "Research Institution",
+      partners: ["InnoHK","HKCRC"],
       industry: "Technology R&D",
       tags: ["InnoHK", "Industry-Academia", "AI R&D", "Hong Kong Science Park"],
       sections: [
@@ -236,8 +227,7 @@ export const cases: Record<string, Record<string | "zh" | "en" | "zh-HK", CaseDa
       subtitle: "作為InnoHK創新香港研發平台的重要成員，HKCRC CraneR團隊持續深化與國際頂尖科研機構的產學研合作，將前沿AI研究成果轉化為可實際落地的工程解決方案，推動香港建造業創新生態體系的形成。",
       coverImage: "/img/feature/f1.jpg",
       date: "2025/06/01",
-      partner: "InnoHK / HKCRC",
-      partnerType: "科研機構",
+      partners: ["InnoHK","HKCRC"],
       industry: "科技研發",
       tags: ["InnoHK", "產學研", "AI研發", "香港科學園"],
       sections: [

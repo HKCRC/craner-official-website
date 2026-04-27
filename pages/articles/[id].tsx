@@ -1,4 +1,4 @@
-import { GetStaticPaths, GetStaticProps } from "next";
+import type { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Link from "next/link";
@@ -70,7 +70,6 @@ export default function Article({ id }: ArticleProps) {
   };
 
   const labelClient = locale === "en" ? "Client" : "客戶";
-  const labelIndustry = locale === "en" ? "Industry" : "行業";
   const labelProduct = locale === "en" ? "Product" : "產品";
   const labelDate = locale === "en" ? "Published" : "發佈日期";
 
@@ -267,16 +266,7 @@ export default function Article({ id }: ArticleProps) {
                       </p>
                     </div>
                   )}
-                  {article.industry && (
-                    <div className="px-5 py-4">
-                      <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">
-                        {labelIndustry}
-                      </p>
-                      <p className="text-sm font-medium text-gray-800">
-                        {article.industry}
-                      </p>
-                    </div>
-                  )}
+
                   {article.tags && article.tags.length > 0 && (
                     <div className="px-5 py-4">
                       <p className="text-xs text-gray-400 uppercase tracking-wider mb-2">
@@ -331,23 +321,15 @@ export default function Article({ id }: ArticleProps) {
   );
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const paths = Object.keys(articles).map((article) => ({
-    params: { id: article },
-  }));
-
-  return {
-    paths,
-    fallback: false,
-  };
-};
-
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps<ArticleProps> = async ({
+  params,
+}) => {
   const id = params?.id as string;
+  if (!id || !articles[id]) {
+    return { notFound: true };
+  }
 
   return {
-    props: {
-      id,
-    },
+    props: { id },
   };
 };

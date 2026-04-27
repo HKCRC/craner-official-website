@@ -1,15 +1,44 @@
+import { useMemo } from "react";
 import { useWindowSize } from "react-use";
 import { MotionRevealUp } from "./animated-text";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-export-i18n";
 import { subtitleGradient2 } from "@/constants";
+import type { HomepageBanner, PublicApiLocale } from "@/lib/api/public-read";
 import { getTextGradientStyle } from "./text-block";
 
-export const Header = () => {
+function siteLangToApiLocale(lang: string | undefined): PublicApiLocale {
+  const key = (lang || "zh-HK").toLowerCase();
+  if (key === "en") return "EN";
+  if (key === "zh") return "ZH_HANS";
+  return "ZH_HANT";
+}
+
+function pickHomepageBanner(
+  banners: HomepageBanner[],
+  lang: string | undefined,
+): HomepageBanner | undefined {
+  if (!banners.length) return undefined;
+  const loc = siteLangToApiLocale(lang);
+  return banners.find((b) => b.locale === loc) ?? banners[0];
+}
+
+export const Header = ({
+  homepageBanners,
+}: {
+  homepageBanners?: HomepageBanner[] | null;
+}) => {
   const { t } = useTranslation();
   const { width } = useWindowSize();
   const router = useRouter();
   const currentLang = router.query.lang as string;
+  console.log(homepageBanners?.[0]?.content);
+
+  const heroVideoSrc = useMemo(() => {
+    const b = pickHomepageBanner(homepageBanners ?? [], currentLang);
+    if (b?.template === "VIDEO") return b.content.videoUrl;
+    return "/video/indexvideo.webm";
+  }, [homepageBanners, currentLang]);
 
   return (
     <div className="main md:max-w-5xl h-[400px] md:h-[750px]">
@@ -27,7 +56,7 @@ export const Header = () => {
         <div className="absolute top-0 left-0 w-full h-40 bg-gradient-to-b from-black/50 to-transparent z-20 pointer-events-none"></div>
 
         <video
-          src="/video/indexvideo.webm"
+          src={heroVideoSrc}
           poster="/img/banner.jpg"
           className="object-cover w-full h-full brightness-90 contrast-125"
           autoPlay

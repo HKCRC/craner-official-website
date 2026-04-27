@@ -8,16 +8,26 @@ import { Footer } from "@/components/footer";
 import { LazyImage } from "@/components/lazy-image";
 import { MotionRevealUp } from "@/components/animated-text";
 import { products } from "@/constants/products";
+import { GetServerSideProps } from "next";
+import {
+  getProducts,
+  type Paginated,
+  type ProductListItem,
+} from "@/lib/api/public-read";
+import { getImageUrl } from "@/lib/helper";
 
 const outfit = Outfit({ subsets: ["latin"] });
 
-const productList = Object.values(products);
-
-export default function ProductsArchive() {
+export default function ProductsArchive({
+  products,
+}: {
+  products: Paginated<ProductListItem>;
+}) {
   const router = useRouter();
   const locale = (router.query.lang as string) || "zh-HK";
-
   const isEn = locale === "en";
+
+  const productList = products.items;
 
   const pageTitle = isEn
     ? "Products | CraneR Technology - Smart Construction Solutions"
@@ -37,7 +47,6 @@ export default function ProductsArchive() {
 
       <Nav />
 
-      {/* Hero */}
       <div className="w-full bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 pt-32 pb-20 px-6">
         <div className="max-w-6xl mx-auto">
           <MotionRevealUp>
@@ -68,14 +77,23 @@ export default function ProductsArchive() {
 
       {/* Products List */}
       <div className="max-w-6xl mx-auto px-6 md:px-6 py-16">
-
         {/* Back to home */}
         <Link
           href={`/?lang=${locale}`}
           className="inline-flex items-center text-sm text-gray-500 hover:text-blue-600 mb-12 transition-colors group"
         >
-          <svg className="w-4 h-4 mr-1.5 transition-transform group-hover:-translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          <svg
+            className="w-4 h-4 mr-1.5 transition-transform group-hover:-translate-x-0.5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
           </svg>
           {isEn ? "Back to Home" : "返回主頁"}
         </Link>
@@ -87,24 +105,28 @@ export default function ProductsArchive() {
               initial={{ y: 20, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, ease: "easeInOut", delay: idx * 0.08 }}
+              transition={{
+                duration: 0.4,
+                ease: "easeInOut",
+                delay: idx * 0.08,
+              }}
               className="flex h-full"
             >
               <Link
-                href={`/products/${product.id}?lang=${locale}`}
+                href={`/products/${product.slug}?lang=${locale}`}
                 className="group flex flex-col w-full rounded-2xl overflow-hidden border border-slate-100 bg-white hover:bg-slate-50 hover:shadow-xl hover:border-blue-100 transition-all duration-500 h-full"
               >
                 {/* Cover Image */}
                 <div className="relative h-52 overflow-hidden bg-slate-100 flex-shrink-0">
                   <LazyImage
-                    src={product.coverImage}
+                    src={getImageUrl(product.coverImageUrl ?? "")}
                     alt={product.title}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                   <div className="absolute top-3 left-3">
                     <span className="text-xs font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full bg-blue-600/85 text-white backdrop-blur-sm">
-                      {product.label}
+                      {product.slug}
                     </span>
                   </div>
                 </div>
@@ -132,10 +154,14 @@ export default function ProductsArchive() {
 
                   {/* Stats */}
                   <div className="grid grid-cols-2 gap-3 border-t border-slate-100 pt-5 mb-5">
-                    {product.stats.slice(0, 2).map((stat) => (
+                    {product.featureList.slice(0, 2).map((stat) => (
                       <div key={stat.label}>
-                        <p className="text-xl font-bold text-blue-600">{stat.value}</p>
-                        <p className="text-xs text-slate-400 mt-0.5">{stat.label}</p>
+                        <p className="text-xl font-bold text-blue-600">
+                          {stat.value}
+                        </p>
+                        <p className="text-xs text-slate-400 mt-0.5">
+                          {stat.label}
+                        </p>
                       </div>
                     ))}
                   </div>
@@ -149,7 +175,12 @@ export default function ProductsArchive() {
                       stroke="currentColor"
                       viewBox="0 0 24 24"
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
                     </svg>
                   </div>
                 </div>
@@ -163,3 +194,12 @@ export default function ProductsArchive() {
     </div>
   );
 }
+
+export const getServerSideProps: GetServerSideProps<{
+  products: Paginated<ProductListItem>;
+}> = async (ctx) => {
+  const products = await getProducts();
+  return {
+    props: { products },
+  };
+};

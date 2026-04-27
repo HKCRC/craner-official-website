@@ -86,13 +86,13 @@ export const CasesSection = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                   {/* Partner badge */}
-                  {data.partner && (
-                    <div className="absolute bottom-4 left-4">
+                  {data?.partners?.map((partner) => (
+                    <div key={partner} className="absolute bottom-4 left-4">
                       <span className="text-xs font-semibold px-3 py-1 rounded-full bg-blue-600/80 text-white backdrop-blur-sm">
-                        {data.partner}
+                        {partner}
                       </span>
                     </div>
-                  )}
+                  ))}
                 </div>
 
                 {/* Content */}
@@ -121,7 +121,7 @@ export const CasesSection = () => {
                   {/* Meta */}
                   <div className="flex items-center justify-between mt-4 pt-4 border-t border-slate-100">
                     <div className="flex items-center gap-1.5 text-xs text-gray-400">
-                      {data.partnerType && (
+                      {data?.partners?.map((partner) => (
                         <>
                           <svg
                             className="w-3.5 h-3.5"
@@ -136,9 +136,9 @@ export const CasesSection = () => {
                               d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
                             />
                           </svg>
-                          <span>{data.partnerType}</span>
+                          <span>{partner}</span>
                         </>
-                      )}
+                      ))}
                     </div>
                     <span className="text-xs text-gray-400">{data.date}</span>
                   </div>

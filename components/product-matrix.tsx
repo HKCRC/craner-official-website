@@ -2,9 +2,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
 import { LazyImage } from "./lazy-image";
-import { products } from "@/constants/products";
-
-const productList = Object.values(products);
+import { ProductListItem } from "@/lib/api/public-read";
+import { getImageUrl } from "@/lib/helper";
 
 const ArrowIcon = () => (
   <svg
@@ -22,7 +21,11 @@ const ArrowIcon = () => (
   </svg>
 );
 
-export const ProductMatrix = () => {
+export const ProductMatrix = ({
+  products,
+}: {
+  products: ProductListItem[];
+}) => {
   const router = useRouter();
   const locale = (router.query.lang as string) || "zh-HK";
   const isEn = locale === "en";
@@ -48,7 +51,9 @@ export const ProductMatrix = () => {
                 <div className="w-8 h-px bg-blue-300" />
               </div>
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4 leading-tight">
-                {isEn ? "Full-Stack Smart Construction Solutions" : "全棧智能建造解決方案"}
+                {isEn
+                  ? "Full-Stack Smart Construction Solutions"
+                  : "全棧智能建造解決方案"}
               </h2>
               <p className="text-slate-500 max-w-xl mx-auto text-base leading-relaxed">
                 {isEn
@@ -69,7 +74,12 @@ export const ProductMatrix = () => {
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"
+                />
               </svg>
             </Link>
           </div>
@@ -77,7 +87,7 @@ export const ProductMatrix = () => {
 
         {/* Product Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {productList.map((product, idx) => (
+          {products.map((product, idx) => (
             <motion.div
               key={product.id}
               initial={{ y: 20, opacity: 0 }}
@@ -90,13 +100,13 @@ export const ProductMatrix = () => {
               }}
             >
               <Link
-                href={`/products/${product.id}?lang=${locale}`}
+                href={`/products/${product.slug}?lang=${locale}`}
                 className="group flex flex-col rounded-2xl overflow-hidden border border-slate-100 bg-white hover:shadow-xl hover:border-blue-100 transition-all duration-300 h-full"
               >
                 {/* Card Image */}
                 <div className="relative h-52 overflow-hidden bg-slate-100">
                   <LazyImage
-                    src={product.coverImage}
+                    src={getImageUrl(product.coverImageUrl ?? "")}
                     alt={product.title}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
@@ -104,7 +114,7 @@ export const ProductMatrix = () => {
                   {/* Label badge */}
                   <div className="absolute top-3 left-3">
                     <span className="text-xs font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full bg-blue-600/85 text-white backdrop-blur-sm">
-                      {product.label}
+                      {product.slug}
                     </span>
                   </div>
                 </div>
@@ -130,13 +140,13 @@ export const ProductMatrix = () => {
                   </div>
                   Stats row
                   <div className="grid grid-cols-2 gap-3 border-t border-slate-100 pt-5">
-                    {product.stats.slice(0, 2).map((stat) => (
-                      <div key={stat.label}>
+                    {product.featureList.slice(0, 2).map((feature) => (
+                      <div key={feature.label}>
                         <p className="text-xl font-bold text-blue-600">
-                          {stat.value}
+                          {feature.value}
                         </p>
                         <p className="text-xs text-slate-400 mt-0.5">
-                          {stat.label}
+                          {feature.label}
                         </p>
                       </div>
                     ))}

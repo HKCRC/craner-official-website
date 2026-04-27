@@ -1,4 +1,4 @@
-import { GetStaticPaths, GetStaticProps } from "next";
+import type { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Link from "next/link";
@@ -34,8 +34,6 @@ export default function CaseDetail({ id }: CaseDetailProps) {
   }
 
   const labelPartner = locale === "en" ? "Partner" : "合作夥伴";
-  const labelPartnerType = locale === "en" ? "Partner Type" : "夥伴類型";
-  const labelIndustry = locale === "en" ? "Industry" : "行業";
   const labelDate = locale === "en" ? "Date" : "日期";
   const labelTags = locale === "en" ? "Tags" : "標籤";
 
@@ -173,36 +171,17 @@ export default function CaseDetail({ id }: CaseDetailProps) {
                       {caseData.date}
                     </p>
                   </div>
-                  {caseData.partner && (
+                  {caseData.partners && caseData.partners.length > 0 && (
                     <div className="px-5 py-4">
                       <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">
                         {labelPartner}
                       </p>
                       <p className="text-sm font-medium text-gray-800">
-                        {caseData.partner}
+                        {caseData.partners.join(", ")}
                       </p>
                     </div>
                   )}
-                  {caseData.partnerType && (
-                    <div className="px-5 py-4">
-                      <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">
-                        {labelPartnerType}
-                      </p>
-                      <p className="text-sm font-medium text-gray-800">
-                        {caseData.partnerType}
-                      </p>
-                    </div>
-                  )}
-                  {caseData.industry && (
-                    <div className="px-5 py-4">
-                      <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">
-                        {labelIndustry}
-                      </p>
-                      <p className="text-sm font-medium text-gray-800">
-                        {caseData.industry}
-                      </p>
-                    </div>
-                  )}
+
                   {caseData.tags && caseData.tags.length > 0 && (
                     <div className="px-5 py-4">
                       <p className="text-xs text-gray-400 uppercase tracking-wider mb-2">
@@ -257,23 +236,15 @@ export default function CaseDetail({ id }: CaseDetailProps) {
   );
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const paths = Object.keys(cases).map((id) => ({
-    params: { id },
-  }));
-
-  return {
-    paths,
-    fallback: false,
-  };
-};
-
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps<CaseDetailProps> = async ({
+  params,
+}) => {
   const id = params?.id as string;
+  if (!id || !cases[id]) {
+    return { notFound: true };
+  }
 
   return {
-    props: {
-      id,
-    },
+    props: { id },
   };
 };

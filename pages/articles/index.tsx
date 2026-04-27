@@ -97,7 +97,9 @@ export default function ArticlesArchive() {
               </svg>
               <input
                 type="text"
-                placeholder={locale === "en" ? "Search articles..." : "搜尋文章..."}
+                placeholder={
+                  locale === "en" ? "Search articles..." : "搜尋文章..."
+                }
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/10 border border-white/10 text-white placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:bg-white/15 transition-all"
@@ -107,60 +109,54 @@ export default function ArticlesArchive() {
         </div>
       </div>
 
-      {/* Tag filters */}
-      <div className="border-b border-slate-100 sticky top-[60px] z-30 bg-white/95 backdrop-blur-md">
-        <div className="max-w-6xl mx-auto px-6 md:px-0 py-3 flex items-center gap-2 overflow-x-auto scrollbar-none">
-          <button
-            onClick={() => setActiveTag(null)}
-            className={`flex-shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full transition-colors ${
-              activeTag === null
-                ? "bg-blue-600 text-white"
-                : "bg-slate-100 text-slate-500 hover:bg-slate-200"
-            }`}
-          >
-            {locale === "en" ? "All" : "全部"}
-          </button>
-          {allTags.map((tag) => (
-            <button
-              key={tag}
-              onClick={() => setActiveTag(activeTag === tag ? null : tag)}
-              className={`flex-shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full transition-colors ${
-                activeTag === tag
-                  ? "bg-blue-600 text-white"
-                  : "bg-slate-100 text-slate-500 hover:bg-slate-200"
-              }`}
-            >
-              {tag}
-            </button>
-          ))}
-        </div>
-      </div>
-
       {/* Articles grid */}
       <div className="max-w-6xl mx-auto px-4 md:px-6 py-12 md:py-16">
-
         {/* Back to home */}
         <Link
           href={`/?lang=${locale}`}
           className="inline-flex items-center text-sm text-slate-400 hover:text-blue-600 mb-10 transition-colors group"
         >
-          <svg className="w-4 h-4 mr-1.5 transition-transform group-hover:-translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          <svg
+            className="w-4 h-4 mr-1.5 transition-transform group-hover:-translate-x-0.5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
           </svg>
           {locale === "en" ? "Back to Home" : "返回首頁"}
         </Link>
 
         {filtered.length === 0 ? (
           <div className="text-center py-24 text-slate-400">
-            <svg className="w-12 h-12 mx-auto mb-4 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            <svg
+              className="w-12 h-12 mx-auto mb-4 opacity-40"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
             </svg>
-            <p className="text-sm">{locale === "en" ? "No articles found" : "找不到相關文章"}</p>
+            <p className="text-sm">
+              {locale === "en" ? "No articles found" : "找不到相關文章"}
+            </p>
           </div>
         ) : (
           <>
             <p className="text-xs text-slate-400 mb-6">
-              {locale === "en" ? `${filtered.length} articles` : `共 ${filtered.length} 篇文章`}
+              {locale === "en"
+                ? `${filtered.length} articles`
+                : `共 ${filtered.length} 篇文章`}
             </p>
 
             {/* First article — featured wide card */}
@@ -189,7 +185,10 @@ export default function ArticlesArchive() {
                       {filtered[0].tags && (
                         <div className="flex flex-wrap gap-2 mb-4">
                           {filtered[0].tags.slice(0, 4).map((tag) => (
-                            <span key={tag} className="text-xs px-2.5 py-1 rounded-full bg-blue-50 text-blue-600 font-medium">
+                            <span
+                              key={tag}
+                              className="text-xs px-2.5 py-1 rounded-full bg-blue-50 text-blue-600 font-medium"
+                            >
                               {tag}
                             </span>
                           ))}
@@ -210,8 +209,18 @@ export default function ArticlesArchive() {
                       </div>
                       <span className="text-xs text-blue-600 font-semibold group-hover:underline flex items-center gap-1">
                         {locale === "en" ? "Read more" : "閱讀全文"}
-                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        <svg
+                          className="w-3.5 h-3.5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
                         </svg>
                       </span>
                     </div>
@@ -228,7 +237,11 @@ export default function ArticlesArchive() {
                     key={article.id}
                     initial={{ y: 16, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
-                    transition={{ duration: 0.35, ease: "easeInOut", delay: 0.05 * idx }}
+                    transition={{
+                      duration: 0.35,
+                      ease: "easeInOut",
+                      delay: 0.05 * idx,
+                    }}
                   >
                     <Link
                       href={`/articles/${article.id}?lang=${locale}`}
@@ -246,7 +259,10 @@ export default function ArticlesArchive() {
                           {article.tags && (
                             <div className="flex flex-wrap gap-1 mb-1.5">
                               {article.tags.slice(0, 2).map((tag) => (
-                                <span key={tag} className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 font-medium">
+                                <span
+                                  key={tag}
+                                  className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 font-medium"
+                                >
                                   {tag}
                                 </span>
                               ))}
@@ -259,7 +275,9 @@ export default function ArticlesArchive() {
                             {article.subtitle}
                           </p>
                         </div>
-                        <p className="text-xs text-slate-400 mt-2">{article.date}</p>
+                        <p className="text-xs text-slate-400 mt-2">
+                          {article.date}
+                        </p>
                       </div>
                     </Link>
                   </motion.div>
