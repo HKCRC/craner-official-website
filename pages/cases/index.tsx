@@ -102,7 +102,7 @@ export default function CasesArchive({
               d="M15 19l-7-7 7-7"
             />
           </svg>
-          {t("cases_section.back_home")}
+          {t("back_home") || "返回主页"}
         </Link>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

@@ -1,7 +1,5 @@
 import { TextGradient } from "@/components/text-block";
 
-// YouTube for non-mainland, 1080 for mobile, 4k for desktop, 1080 have no size differen than 4k, i give up
-
 export const subtitleGradient1: TextGradient = {
     deg: 270,
     from: "#204DA0",
@@ -107,12 +105,18 @@ export enum VIDEO_INTRO_ENUM {
    "BOTTOM" = "1"
 }
 
-
-
-export const matchText = (t: (key: string) => string) => [
-  `<strong class="text-2xl">${t('video_prompts_module.feature1_01_desc')}</strong>`,
-  `<strong class="text-2xl">${t('video_prompts_module.feature1_02_desc')}</strong>`,
-]
-
-
 export const businessEmail = "cranerbusiness@craner.hk";
+
+export enum QUERY_MULTI_LANGUAGE_ENUM {
+  "news" = "news", // /articles
+  "news-cn" = "news-cn",
+  "news-hk" = "news-hk",
+
+  "cases" = "cases", // /cases
+  "cases-cn" = "cases-cn",
+  "cases-hk" = "cases-hk",
+
+  "product" = "product", // /products
+  "products-cn" = "product-cn",
+  "products-hk" = "product-hk",
+}

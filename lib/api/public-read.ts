@@ -10,6 +10,7 @@ export type Paginated<T> = {
   pageSize: number;
   total: number;
   totalPages: number;
+  category: string;
   items: T[];
 };
 
@@ -305,12 +306,18 @@ export function getPostsByCategory(
 
 /** GET /api/products */
 export function getProducts(
-  params?: PaginationQuery,
-  init?: PublicReadFetchOptions
+  params?: (PaginationQuery & { category?: string; categorySlug?: string }) | undefined,
+  init?: PublicReadFetchOptions,
 ): Promise<Paginated<ProductListItem>> {
+  const category = params?.category ?? params?.categorySlug;
+    
   return readJson<Paginated<ProductListItem>>(
     "/api/products",
-    { page: params?.page, pageSize: params?.pageSize },
+    {
+      page: params?.page,
+      pageSize: params?.pageSize,
+      category: category,
+    },
     init
   );
 }

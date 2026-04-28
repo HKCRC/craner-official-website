@@ -136,7 +136,7 @@ export const ProductMatrix = ({
                   </p>
                   {/* Tags */}
                   <div className="flex flex-wrap gap-1.5 mb-5">
-                    {product.tags.map((tag) => (
+                    {product?.tags?.map((tag) => (
                       <span
                         key={tag}
                         className="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 font-medium"
@@ -147,7 +147,7 @@ export const ProductMatrix = ({
                   </div>
 
                   <div className="grid grid-cols-2 gap-3 border-t border-slate-100 pt-5">
-                    {product.featureList.slice(0, 2).map((feature) => (
+                    {product?.featureList?.slice(0, 2).map((feature) => (
                       <div key={feature.label}>
                         <p className="text-xl font-bold text-blue-600">
                           {feature.value}

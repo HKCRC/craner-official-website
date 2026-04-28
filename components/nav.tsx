@@ -2,30 +2,102 @@ import { MotionRevealUp } from "./animated-text";
 import Image from "next/image";
 import Link from "next/link";
 import { useTranslation } from "next-export-i18n";
-import { useState, useRef } from "react";
-import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion";
+import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  AnimatePresence,
+  motion,
+  useMotionValueEvent,
+  useScroll,
+} from "framer-motion";
 import { useRouter } from "next/router";
 import { WaitingListModal } from "./modal";
 import { LanguageSwitcher } from "./language-switcher";
-import { products } from "@/constants/products";
+import { usePublicConfig } from "@/lib/public-config-context";
+import { getProducts, type ProductListItem } from "@/lib/api/public-read";
+import { useProducts } from "@/lib/products-context";
 
-const productList = Object.values(products);
+type NavProductItem = {
+  key: string;
+  hrefId: string; // used in `/products/[id]`
+  title: string;
+  tags: string[];
+};
 
-export const Nav = () => {
+export const Nav = ({ products }: { products?: ProductListItem[] }) => {
   const { scrollY } = useScroll();
   const { t } = useTranslation();
   const router = useRouter();
   const locale = (router.query.lang as string) || "zh-HK";
   const isEn = locale === "en";
+  const config = usePublicConfig();
+  const productsFromContext = useProducts();
+  const [clientProducts, setClientProducts] = useState<
+    ProductListItem[] | null
+  >(null);
 
   const [showWaitingListModal, setShowWaitingListModal] = useState(false);
   const [isScrolledNav, setIsScrolledNav] = useState(false);
   const [productDropdownOpen, setProductDropdownOpen] = useState(false);
   const dropdownTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  useEffect(() => {
+    // If we already have products via props/context, skip fetching.
+    if (products && products.length) return;
+    if (productsFromContext && productsFromContext.length) return;
+    if (clientProducts !== null) return; // already fetched (success or failure)
+
+    let cancelled = false;
+    (async () => {
+      try {
+        const category =
+          locale === "en"
+            ? "product"
+            : locale === "zh"
+              ? "product-cn"
+              : "product-hk";
+        const res = await getProducts({ pageSize: 50, category });
+        if (!cancelled) setClientProducts(res.items ?? []);
+      } catch {
+        if (!cancelled) setClientProducts([]);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [products, productsFromContext, clientProducts, locale]);
+
+  const productList: NavProductItem[] = useMemo(() => {
+    const resolved =
+      products && products.length
+        ? products
+        : productsFromContext && productsFromContext.length
+          ? productsFromContext
+          : clientProducts && clientProducts.length
+            ? clientProducts
+            : [];
+
+    return resolved.map((p) => ({
+      key: p.id,
+      hrefId: p.slug,
+      title: p.title,
+      tags: p.tags ?? [],
+    }));
+  }, [products, productsFromContext, clientProducts]);
+
   useMotionValueEvent(scrollY, "change", (latest) => {
     setIsScrolledNav(latest > 0.05);
   });
+
+  const renderProductMoreText = () => {
+    switch (locale) {
+      case "en":
+        return config?.["product_more_en"];
+      case "zh-HK":
+        return config?.["product_more_chhk"];
+      default:
+        return config?.["product_more_ch"];
+    }
+  };
 
   const openModal = () => setShowWaitingListModal(true);
 
@@ -35,27 +107,26 @@ export const Nav = () => {
   };
 
   const handleProductMouseLeave = () => {
-    dropdownTimeout.current = setTimeout(() => setProductDropdownOpen(false), 120);
+    dropdownTimeout.current = setTimeout(
+      () => setProductDropdownOpen(false),
+      120,
+    );
+  };
+
+  const renderLocaleKey = () => {
+    switch (locale) {
+      case "en":
+        return "en";
+      case "zh-HK":
+        return "chhk";
+      default:
+        return "ch";
+    }
   };
 
   const navTextClass = isScrolledNav
     ? "text-slate-700 hover:text-blue-600"
     : "text-white/90 hover:text-white";
-
-  const navItems = [
-    {
-      label: isEn ? "Products" : "產品",
-      hasDropdown: true,
-    },
-    {
-      label: isEn ? "Success Cases" : "成功案例",
-      href: `/cases?lang=${locale}`,
-    },
-    {
-      label: isEn ? "News" : "最新動態",
-      href: `/articles?lang=${locale}`,
-    },
-  ];
 
   return (
     <>
@@ -89,7 +160,10 @@ export const Nav = () => {
             </MotionRevealUp>
 
             {/* Center nav links — desktop only */}
-            <MotionRevealUp delay={0.1} className="hidden md:flex items-center gap-1 ml-10">
+            <MotionRevealUp
+              delay={0.1}
+              className="hidden md:flex items-center gap-1 ml-10"
+            >
               {/* Products with dropdown */}
               <div
                 className="relative"
@@ -99,14 +173,19 @@ export const Nav = () => {
                 <button
                   className={`flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg transition-colors ${navTextClass}`}
                 >
-                  {isEn ? "Products" : "產品"}
+                  {config?.["product_tag_" + renderLocaleKey()]}
                   <svg
                     className={`w-3.5 h-3.5 transition-transform duration-200 ${productDropdownOpen ? "rotate-180" : ""}`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
                   </svg>
                 </button>
 
@@ -124,19 +203,29 @@ export const Nav = () => {
                       <div className="p-1.5">
                         {productList.map((product) => (
                           <Link
-                            key={product.id}
-                            href={`/products/${product.id}?lang=${locale}`}
+                            key={product.key}
+                            href={`/products/${product.hrefId}?lang=${locale}`}
                             className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-blue-50 group transition-colors"
                             onClick={() => setProductDropdownOpen(false)}
                           >
                             <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-600 transition-colors">
-                              <svg className="w-4 h-4 text-blue-600 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18" />
+                              <svg
+                                className="w-4 h-4 text-blue-600 group-hover:text-white transition-colors"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"
+                                />
                               </svg>
                             </div>
                             <div className="min-w-0">
                               <p className="text-sm font-semibold text-slate-800 group-hover:text-blue-700 transition-colors leading-tight">
-                                {product.label}
+                                {product.title}
                               </p>
                               <p className="text-xs text-slate-400 mt-0.5 truncate">
                                 {product.tags.slice(0, 2).join(" · ")}
@@ -150,9 +239,19 @@ export const Nav = () => {
                           className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-blue-600 hover:bg-blue-50 transition-colors"
                           onClick={() => setProductDropdownOpen(false)}
                         >
-                          {isEn ? "View All Products" : "查看全部產品"}
-                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                          {renderProductMoreText()}
+                          <svg
+                            className="w-3.5 h-3.5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M17 8l4 4m0 0l-4 4m4-4H3"
+                            />
                           </svg>
                         </Link>
                       </div>
@@ -166,7 +265,7 @@ export const Nav = () => {
                 href={`/cases?lang=${locale}`}
                 className={`text-sm font-medium px-3 py-2 rounded-lg transition-colors ${navTextClass}`}
               >
-                {isEn ? "Success Cases" : "成功案例"}
+                {config?.["business_tag_" + renderLocaleKey()]}
               </Link>
 
               {/* Articles */}
@@ -174,7 +273,7 @@ export const Nav = () => {
                 href={`/articles?lang=${locale}`}
                 className={`text-sm font-medium px-3 py-2 rounded-lg transition-colors ${navTextClass}`}
               >
-                {isEn ? "News" : "最新動態"}
+                {config?.["news_tag_" + renderLocaleKey()]}
               </Link>
             </MotionRevealUp>
 

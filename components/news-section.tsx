@@ -3,7 +3,6 @@ import { MotionRevealUp } from "./animated-text";
 import { LazyImage } from "./lazy-image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { articles } from "@/constants/articles";
 import { getImageUrl } from "@/lib/helper";
 import { usePublicConfig } from "@/lib/public-config-context";
 import { GetServerSideProps } from "next";

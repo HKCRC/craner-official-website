@@ -7,9 +7,17 @@ import { LazyImage } from "@/components/lazy-image";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { SEO_CONFIG } from "@/constants/seo";
-import { getPostBySlug, PostDetail } from "@/lib/api/public-read";
+import {
+  getPostBySlug,
+  type Config,
+  type Paginated,
+  PostDetail,
+  type ProductListItem,
+} from "@/lib/api/public-read";
 import { getImageUrl } from "@/lib/helper";
 import { renderCaseHtmlContent } from "@/lib/render-case-html";
+import { getPublicConfigCached } from "@/lib/data/public-config-cache";
+import { getProductsCached } from "@/lib/data/products-cache";
 
 export default function CaseDetail({
   caseData,
@@ -17,6 +25,8 @@ export default function CaseDetail({
   const { t } = useTranslation();
   const router = useRouter();
   const locale = (router.query.lang as string) || "zh-HK";
+
+  console.error(JSON.stringify(caseData, null, 2));
 
   if (!caseData) {
     return (
@@ -210,14 +220,21 @@ export default function CaseDetail({
 
 export const getServerSideProps: GetServerSideProps<{
   caseData: PostDetail;
+  config: Config;
+  products: Paginated<ProductListItem>;
 }> = async ({ params }) => {
   const id = params?.id as string;
-  const caseData = await getPostBySlug(id);
+  const fetchInit = { baseUrl: process.env.REQUEST_BASE_URL };
+  const [caseData, config, products] = await Promise.all([
+    getPostBySlug(id, fetchInit),
+    getPublicConfigCached(fetchInit),
+    getProductsCached({ pageSize: 50 }, fetchInit),
+  ]);
   if (!id || !caseData) {
     return { notFound: true };
   }
 
   return {
-    props: { caseData },
+    props: { caseData, config, products },
   };
 };

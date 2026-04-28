@@ -11,11 +11,14 @@ import { MotionRevealUp } from "@/components/animated-text";
 import {
   getProductBySlug,
   type ProductBlock,
+  type Config,
   type ProductDetail,
   type ProductQABlock,
 } from "@/lib/api/public-read";
 import { getImageUrl } from "@/lib/helper";
-// import { products } from "@/constants/products";
+import { getPublicConfigCached } from "@/lib/data/public-config-cache";
+import { getProductsCached } from "@/lib/data/products-cache";
+import type { Paginated, ProductListItem } from "@/lib/api/public-read";
 
 interface ProductPageProps {
   id: string;
@@ -510,11 +513,18 @@ export default function ProductPage({ product }: { product: ProductDetail }) {
 
 export const getServerSideProps: GetServerSideProps<{
   product: Awaited<ReturnType<typeof getProductBySlug>>;
+  config: Config;
+  products: Paginated<ProductListItem>;
 }> = async ({ params }) => {
   const id = params?.id as string;
-  const product = await getProductBySlug(id);
+  const fetchInit = { baseUrl: process.env.REQUEST_BASE_URL };
+  const [product, config, products] = await Promise.all([
+    getProductBySlug(id, fetchInit),
+    getPublicConfigCached(fetchInit),
+    getProductsCached({ pageSize: 50 }, fetchInit),
+  ]);
   if (!product) {
     return { notFound: true };
   }
-  return { props: { product } };
+  return { props: { product, config, products } };
 };

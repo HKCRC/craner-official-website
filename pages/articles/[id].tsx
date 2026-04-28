@@ -7,9 +7,17 @@ import { LazyImage } from "@/components/lazy-image";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { SEO_CONFIG } from "@/constants/seo";
-import { getPostBySlug, type PostDetail } from "@/lib/api/public-read";
+import {
+  getPostBySlug,
+  type Config,
+  type Paginated,
+  type PostDetail,
+  type ProductListItem,
+} from "@/lib/api/public-read";
 import { getImageUrl } from "@/lib/helper";
 import { renderCaseHtmlContent } from "@/lib/render-case-html";
+import { getPublicConfigCached } from "@/lib/data/public-config-cache";
+import { getProductsCached } from "@/lib/data/products-cache";
 
 export default function ArticleDetail({
   article,
@@ -31,7 +39,8 @@ export default function ArticleDetail({
       ? `${article.title} | CraneR Technology - HKCRC`
       : `${article.title} | 可越科技 CraneR`;
   const canonicalUrl = `${SEO_CONFIG.siteUrl}/articles/${article.slug ?? ""}?lang=${locale}`;
-  const coverSrc = getImageUrl(article.coverImageUrl ?? "") || "/img/banner.jpg";
+  const coverSrc =
+    getImageUrl(article.coverImageUrl ?? "") || "/img/banner.jpg";
   const ogImageAbsolute = coverSrc.startsWith("http")
     ? coverSrc
     : `${SEO_CONFIG.siteUrl}${coverSrc.startsWith("/") ? "" : "/"}${coverSrc}`;
@@ -95,7 +104,7 @@ export default function ArticleDetail({
               d="M15 19l-7-7 7-7"
             />
           </svg>
-          {t("articles.back") || "返回"}
+          {t("back_home") || "返回主页"}
         </Link>
 
         <p className="text-lg md:text-xl text-gray-600 leading-relaxed mb-10 font-light border-l-4 border-blue-500 pl-5">
@@ -114,9 +123,16 @@ export default function ArticleDetail({
 
 export const getServerSideProps: GetServerSideProps<{
   article: PostDetail;
+  config: Config;
+  products: Paginated<ProductListItem>;
 }> = async ({ params }) => {
   const id = params?.id as string;
-  const article = await getPostBySlug(id);
+  const fetchInit = { baseUrl: process.env.REQUEST_BASE_URL };
+  const [article, config, products] = await Promise.all([
+    getPostBySlug(id, fetchInit),
+    getPublicConfigCached(fetchInit),
+    getProductsCached({ pageSize: 50 }, fetchInit),
+  ]);
   if (!id || !article) return { notFound: true };
-  return { props: { article } };
+  return { props: { article, config, products } };
 };

@@ -4,7 +4,6 @@ import {
   getFeaturedProducts,
   getHomepageBanners,
   getPostsByCategory,
-  getProducts,
   PostListItem,
   ProductListItem,
   type ContactInfo,
@@ -12,6 +11,7 @@ import {
   type HomepageBanner,
 } from "@/lib/api/public-read";
 import { getPublicConfigCached } from "@/lib/data/public-config-cache";
+import { getProductsCached } from "@/lib/data/products-cache";
 
 export type HomePagePublicPayload = {
   banners: HomepageBanner[];
@@ -29,17 +29,20 @@ export type HomePagePublicPayload = {
  */
 export async function loadHomePagePublicData(init?: {
   baseUrl?: string;
+  currentLang?: string;
 }): Promise<HomePagePublicPayload> {
   const fetchInit = init?.baseUrl ? { baseUrl: init.baseUrl } : {};
+  const currentLang = `${init?.currentLang ? `-${init?.currentLang}` : ""}`;
 
   const [bannersRes, productsRes, featuredRes, contactsRes, configRes, casesRes, articlesRes] = await Promise.allSettled([
     getHomepageBanners(fetchInit),
-    getProducts({ pageSize: 8 }, fetchInit),
+    getProductsCached({ pageSize: 8 }, fetchInit, undefined, `product${currentLang}`),
     getFeaturedProducts({ take: 8 }, fetchInit),
     getContactInfos(fetchInit),
     getPublicConfigCached(fetchInit),
-    getPostsByCategory("cases", { pageSize: 8 }, fetchInit),
-    getPostsByCategory("news", { pageSize: 8 }, fetchInit),
+    getPostsByCategory(`cases${currentLang}`, { pageSize: 8 }, fetchInit),
+    getPostsByCategory(`cases${currentLang}`, { pageSize: 8 }, fetchInit),
+    getPostsByCategory(`news${currentLang}`, { pageSize: 8 }, fetchInit),
   ]); 
 
   return {

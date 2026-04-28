@@ -9,18 +9,22 @@ import { LazyImage } from "@/components/lazy-image";
 import { MotionRevealUp } from "@/components/animated-text";
 import { getImageUrl } from "@/lib/helper";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { getPostsByCategory, PostListItem } from "@/lib/api/public-read";
+import {
+  getPostsByCategory,
+  PostListItem,
+  type Config,
+} from "@/lib/api/public-read";
 import { usePublicConfig } from "@/lib/public-config-context";
+import { getPublicConfigCached } from "@/lib/data/public-config-cache";
+import { useTranslation } from "next-export-i18n";
 
 export default function ArticlesArchive({
   articles,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const locale = (router.query.lang as string) || "zh-HK";
-  const [search, setSearch] = useState("");
-  const [activeTag, setActiveTag] = useState<string | null>(null);
   const config = usePublicConfig();
-
+  const { t } = useTranslation();
   const renderTitleAndSubTitle = () => {
     switch (locale) {
       case "en":
@@ -46,23 +50,6 @@ export default function ArticlesArchive({
         };
     }
   };
-
-  const allTags = useMemo(() => {
-    const tagSet = new Set<string>();
-    articles.forEach((a) => a.tags?.forEach((t) => tagSet.add(t)));
-    return Array.from(tagSet);
-  }, [articles]);
-
-  const filtered = useMemo(() => {
-    return articles.filter((a) => {
-      const matchSearch =
-        !search ||
-        a.title.toLowerCase().includes(search.toLowerCase()) ||
-        a.excerpt.toLowerCase().includes(search.toLowerCase());
-      const matchTag = !activeTag || a.tags?.includes(activeTag);
-      return matchSearch && matchTag;
-    });
-  }, [articles, search, activeTag]);
 
   return (
     <div className="min-h-screen bg-white">
@@ -113,10 +100,10 @@ export default function ArticlesArchive({
               d="M15 19l-7-7 7-7"
             />
           </svg>
-          {locale === "en" ? "Back to Home" : "返回首頁"}
+          {t("back_home") || "返回主页"}
         </Link>
 
-        {filtered.length === 0 ? (
+        {articles.length === 0 ? (
           <div className="text-center py-24 text-slate-400">
             <svg
               className="w-12 h-12 mx-auto mb-4 opacity-40"
@@ -137,14 +124,8 @@ export default function ArticlesArchive({
           </div>
         ) : (
           <>
-            <p className="text-xs text-slate-400 mb-6">
-              {locale === "en"
-                ? `${filtered.length} articles`
-                : `共 ${filtered.length} 篇文章`}
-            </p>
-
             {/* First article — featured wide card */}
-            {filtered[0] && (
+            {articles[0] && (
               <motion.div
                 initial={{ y: 16, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -152,23 +133,23 @@ export default function ArticlesArchive({
                 className="mb-6"
               >
                 <Link
-                  href={`/articles/${filtered[0].slug}?lang=${locale}`}
+                  href={`/articles/${articles[0].slug}?lang=${locale}`}
                   className="group flex flex-col md:flex-row bg-slate-50 hover:bg-white hover:shadow-xl transition-all duration-400 rounded-2xl overflow-hidden border border-slate-100"
                 >
                   <div className="md:w-2/5 overflow-hidden flex-shrink-0">
                     <div className="w-full h-56 md:h-72">
                       <LazyImage
-                        src={getImageUrl(filtered[0].coverImageUrl ?? "")}
-                        alt={filtered[0].title}
+                        src={getImageUrl(articles[0].coverImageUrl ?? "")}
+                        alt={articles[0].title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                     </div>
                   </div>
                   <div className="flex flex-col justify-between p-7 md:p-10 flex-1">
                     <div>
-                      {filtered[0].tags && (
+                      {articles[0].tags && (
                         <div className="flex flex-wrap gap-2 mb-4">
-                          {filtered[0].tags.slice(0, 4).map((tag) => (
+                          {articles[0].tags.slice(0, 4).map((tag) => (
                             <span
                               key={tag}
                               className="text-xs px-2.5 py-1 rounded-full bg-blue-50 text-blue-600 font-medium"
@@ -179,10 +160,10 @@ export default function ArticlesArchive({
                         </div>
                       )}
                       <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors leading-snug">
-                        {filtered[0].title}
+                        {articles[0].title}
                       </h2>
                       <p className="text-sm text-gray-500 line-clamp-3 leading-relaxed">
-                        {filtered[0].excerpt}
+                        {articles[0].excerpt}
                       </p>
                     </div>
                     <div className="flex items-center justify-between mt-6">
@@ -190,7 +171,7 @@ export default function ArticlesArchive({
                         <span>CraneR Technology</span>
                         <span className="opacity-40">•</span>
                         <span>
-                          {new Date(filtered[0].publishedAt).toLocaleDateString(
+                          {new Date(articles[0].publishedAt).toLocaleDateString(
                             locale,
                           )}
                         </span>
@@ -218,9 +199,9 @@ export default function ArticlesArchive({
             )}
 
             {/* Rest — 2-column card grid */}
-            {filtered.length > 1 && (
+            {articles.length > 1 && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                {filtered.slice(1).map((article, idx) => (
+                {articles.slice(1).map((article, idx) => (
                   <motion.div
                     key={article.id}
                     initial={{ y: 16, opacity: 0 }}
@@ -285,14 +266,18 @@ export default function ArticlesArchive({
 
 export const getServerSideProps: GetServerSideProps<{
   articles: PostListItem[];
+  config: Config;
 }> = async (ctx) => {
   const articlesRes = await getPostsByCategory(
     "news",
     { pageSize: 8 },
     { baseUrl: process.env.REQUEST_BASE_URL },
   );
+  const config = await getPublicConfigCached({
+    baseUrl: process.env.REQUEST_BASE_URL,
+  });
   const articles = articlesRes.items ?? [];
   return {
-    props: { articles },
+    props: { articles, config },
   };
 };

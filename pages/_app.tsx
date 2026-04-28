@@ -4,8 +4,13 @@ import Head from "next/head";
 import { appWithTranslation } from "next-i18next";
 import { useTranslation } from "next-export-i18n";
 import ToastComponent from "@/components/common-dialog";
-import { SEO_CONFIG, generateOrganizationSchema, generateLocalBusinessSchema } from "@/constants/seo";
+import {
+  SEO_CONFIG,
+  generateOrganizationSchema,
+  generateLocalBusinessSchema,
+} from "@/constants/seo";
 import { PublicConfigProvider } from "@/lib/public-config-context";
+import { ProductsProvider } from "@/lib/products-context";
 
 function App({ Component, pageProps }: AppProps) {
   const { t } = useTranslation();
@@ -32,20 +37,23 @@ function App({ Component, pageProps }: AppProps) {
         <meta name="language" content="English, Chinese" />
         <meta name="revisit-after" content="7 days" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        
+
         {/* Canonical URL */}
         <link rel="canonical" href={SEO_CONFIG.siteUrl} />
-        
+
         {/* Favicon */}
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/img/logo.png" />
-        
+
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
         <meta property="og:url" content={SEO_CONFIG.siteUrl} />
         <meta property="og:title" content={ogTitle} />
         <meta property="og:description" content={ogDescription} />
-        <meta property="og:image" content={`${SEO_CONFIG.siteUrl}/img/banner.jpg`} />
+        <meta
+          property="og:image"
+          content={`${SEO_CONFIG.siteUrl}/img/banner.jpg`}
+        />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:site_name" content={SEO_CONFIG.siteName} />
@@ -59,7 +67,10 @@ function App({ Component, pageProps }: AppProps) {
         <meta name="twitter:url" content={SEO_CONFIG.siteUrl} />
         <meta name="twitter:title" content={ogTitle} />
         <meta name="twitter:description" content={ogDescription} />
-        <meta name="twitter:image" content={`${SEO_CONFIG.siteUrl}/img/banner.jpg`} />
+        <meta
+          name="twitter:image"
+          content={`${SEO_CONFIG.siteUrl}/img/banner.jpg`}
+        />
 
         {/* Geo Tags for Hong Kong */}
         <meta name="geo.region" content="HK" />
@@ -79,10 +90,26 @@ function App({ Component, pageProps }: AppProps) {
         <meta name="apple-mobile-web-app-title" content="CraneR" />
 
         {/* Alternate Language Links */}
-        <link rel="alternate" hrefLang="en" href={`${SEO_CONFIG.siteUrl}/?lang=en`} />
-        <link rel="alternate" hrefLang="zh" href={`${SEO_CONFIG.siteUrl}/?lang=zh`} />
-        <link rel="alternate" hrefLang="zh-HK" href={`${SEO_CONFIG.siteUrl}/?lang=zh-HK`} />
-        <link rel="alternate" hrefLang="zh-TW" href={`${SEO_CONFIG.siteUrl}/?lang=zh-TW`} />
+        <link
+          rel="alternate"
+          hrefLang="en"
+          href={`${SEO_CONFIG.siteUrl}/?lang=en`}
+        />
+        <link
+          rel="alternate"
+          hrefLang="zh"
+          href={`${SEO_CONFIG.siteUrl}/?lang=zh`}
+        />
+        <link
+          rel="alternate"
+          hrefLang="zh-HK"
+          href={`${SEO_CONFIG.siteUrl}/?lang=zh-HK`}
+        />
+        <link
+          rel="alternate"
+          hrefLang="zh-TW"
+          href={`${SEO_CONFIG.siteUrl}/?lang=zh-TW`}
+        />
         <link rel="alternate" hrefLang="x-default" href={SEO_CONFIG.siteUrl} />
 
         {/* JSON-LD Structured Data */}
@@ -103,7 +130,13 @@ function App({ Component, pageProps }: AppProps) {
       <PublicConfigProvider
         value={pageProps?.config ?? pageProps?.homePageData?.config ?? null}
       >
-        <Component {...pageProps} />
+        <ProductsProvider
+          value={
+            pageProps?.products?.items ?? pageProps?.homePageData?.products ?? null
+          }
+        >
+          <Component {...pageProps} />
+        </ProductsProvider>
       </PublicConfigProvider>
     </div>
   );

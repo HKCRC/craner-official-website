@@ -7,26 +7,8 @@ interface LanguageSwitcherProps {
   variant?: "minimal" | "full";
 }
 
-/**
- * 根据浏览器语言获取默认语言
- * - 英语地区 → en
- * - 中文地区 → zh-HK (繁体中文)
- */
-function getPrimaryLanguage() {
-  return (
-    (navigator.languages && navigator.languages[0]) || navigator.language || ""
-  );
-}
-
-function isPrimaryEnglish() {
-  const lang = getPrimaryLanguage().toLowerCase();
-  return lang.startsWith("en");
-}
-
 const getDefaultLang = (): string => {
-  if (isPrimaryEnglish()) return "en";
-
-  // 中文环境默认繁体
+  // Site default language
   return "zh-HK";
 };
 
@@ -48,15 +30,17 @@ export const LanguageSwitcher = ({
           query: { ...router.query, lang: detectedLang },
         },
         undefined,
-        { shallow: true }
+        { shallow: true },
       );
     }
-  }, [router.isReady]);
+  }, [router]);
 
   const switchLang = (lang: string) => {
-    router.push({ pathname: router.pathname, query: { lang } }, undefined, {
-      shallow: true,
-    });
+    router.push(
+      { pathname: router.pathname, query: { ...router.query, lang } },
+      undefined,
+      { shallow: true },
+    );
   };
 
   if (variant === "full") {

@@ -119,10 +119,10 @@ export const BusinessSwiper = ({
                 {activeProduct.featureList.map((feature) => (
                   <div key={feature.label} className="space-y-4">
                     <div className="text-4xl font-bold text-gray-900">
-                      <div key={feature.label}>{feature.value}</div>
+                      <span>{feature.value}</span>
                     </div>
                     <p className="text-sm text-gray-500 leading-relaxed border-l-2 border-blue-600 pl-4">
-                      <div key={feature.label}>{feature.label}</div>
+                      {feature.label}
                     </p>
                   </div>
                 ))}

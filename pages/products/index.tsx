@@ -7,14 +7,17 @@ import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { LazyImage } from "@/components/lazy-image";
 import { MotionRevealUp } from "@/components/animated-text";
-import { products } from "@/constants/products";
 import { GetServerSideProps } from "next";
 import {
-  getProducts,
+  type Config,
   type Paginated,
   type ProductListItem,
 } from "@/lib/api/public-read";
+import { getProductsCached } from "@/lib/data/products-cache";
 import { getImageUrl } from "@/lib/helper";
+import { usePublicConfig } from "@/lib/public-config-context";
+import { getPublicConfigCached } from "@/lib/data/public-config-cache";
+import { useTranslation } from "next-export-i18n";
 
 const outfit = Outfit({ subsets: ["latin"] });
 
@@ -25,23 +28,37 @@ export default function ProductsArchive({
 }) {
   const router = useRouter();
   const locale = (router.query.lang as string) || "zh-HK";
-  const isEn = locale === "en";
-
+  const config = usePublicConfig();
   const productList = products.items;
-
-  const pageTitle = isEn
-    ? "Products | CraneR Technology - Smart Construction Solutions"
-    : "產品矩陣 | 可越科技 CraneR - 智能建造解決方案";
-
-  const pageDesc = isEn
-    ? "Explore CraneR's full-stack intelligent construction product suite — AI tower crane systems, path planning engines, and site safety monitoring."
-    : "探索可越科技全棧智能建造產品矩陣——智能天秤系統、路徑規劃引擎與地盤安全監控。";
+  const { t } = useTranslation();
+  const renderTitleAndSubTitle = () => {
+    switch (locale) {
+      case "en":
+        return {
+          title: config?.["product_title_en"],
+          subtitle: config?.["product_subtitle_en"],
+          tag: config?.["product_tag_en"],
+        };
+      case "zh-HK":
+        return {
+          title: config?.["product_title_chhk"],
+          subtitle: config?.["product_subtitle_chhk"],
+          tag: config?.["product_tag_chhk"],
+        };
+      default:
+        return {
+          title: config?.["product_title_ch"],
+          subtitle: config?.["product_subtitle_ch"],
+          tag: config?.["product_tag_ch"],
+        };
+    }
+  };
 
   return (
     <div className={`min-h-screen bg-white ${outfit.className}`}>
       <Head>
-        <title>{pageTitle}</title>
-        <meta name="description" content={pageDesc} />
+        <title>{renderTitleAndSubTitle()?.title}</title>
+        <meta name="description" content={renderTitleAndSubTitle()?.subtitle} />
         <meta name="robots" content="index, follow" />
       </Head>
 
@@ -53,24 +70,15 @@ export default function ProductsArchive({
             <div className="flex items-center gap-3 mb-5">
               <div className="w-8 h-px bg-blue-400" />
               <span className="text-blue-400 font-bold text-sm uppercase tracking-[0.2em]">
-                {isEn ? "Product Matrix" : "產品矩陣"}
+                {renderTitleAndSubTitle()?.tag}
               </span>
               <div className="w-8 h-px bg-blue-400" />
             </div>
           </MotionRevealUp>
           <MotionRevealUp delay={0.1}>
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight tracking-tight">
-              {isEn
-                ? "Full-Stack Smart Construction Solutions"
-                : "全棧智能建造解決方案"}
+              {renderTitleAndSubTitle()?.title}
             </h1>
-          </MotionRevealUp>
-          <MotionRevealUp delay={0.2}>
-            <p className="text-lg text-slate-300 max-w-2xl leading-relaxed">
-              {isEn
-                ? "From perception and planning to safety monitoring, CraneR delivers an integrated product suite covering the full intelligence lifecycle of tower crane operations."
-                : "從感知、規劃到安全監控，CraneR 提供覆蓋天秤智能化全流程的系統產品。"}
-            </p>
           </MotionRevealUp>
         </div>
       </div>
@@ -95,7 +103,7 @@ export default function ProductsArchive({
               d="M15 19l-7-7 7-7"
             />
           </svg>
-          {isEn ? "Back to Home" : "返回主頁"}
+          {t("back_home") || "返回主页"}
         </Link>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -168,7 +176,7 @@ export default function ProductsArchive({
 
                   {/* CTA */}
                   <div className="flex items-center gap-1.5 text-sm font-semibold text-blue-600 group-hover:text-blue-700 transition-colors">
-                    {isEn ? "Learn More" : "了解詳情"}
+                    {renderTitleAndSubTitle()?.title}
                     <svg
                       className="w-4 h-4 transition-transform group-hover:translate-x-1"
                       fill="none"
@@ -197,9 +205,15 @@ export default function ProductsArchive({
 
 export const getServerSideProps: GetServerSideProps<{
   products: Paginated<ProductListItem>;
+  config: Config;
 }> = async (ctx) => {
-  const products = await getProducts();
+  const products = await getProductsCached(undefined, {
+    baseUrl: process.env.REQUEST_BASE_URL,
+  });
+  const config = await getPublicConfigCached({
+    baseUrl: process.env.REQUEST_BASE_URL,
+  });
   return {
-    props: { products },
+    props: { products, config },
   };
 };
