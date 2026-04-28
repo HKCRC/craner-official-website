@@ -32,7 +32,6 @@ export const Header = ({
   const { width } = useWindowSize();
   const router = useRouter();
   const currentLang = router.query.lang as string;
-  console.log(homepageBanners?.[0]?.content);
 
   const heroVideoSrc = useMemo(() => {
     const b = pickHomepageBanner(homepageBanners ?? [], currentLang);

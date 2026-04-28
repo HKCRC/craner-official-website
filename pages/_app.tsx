@@ -5,6 +5,7 @@ import { appWithTranslation } from "next-i18next";
 import { useTranslation } from "next-export-i18n";
 import ToastComponent from "@/components/common-dialog";
 import { SEO_CONFIG, generateOrganizationSchema, generateLocalBusinessSchema } from "@/constants/seo";
+import { PublicConfigProvider } from "@/lib/public-config-context";
 
 function App({ Component, pageProps }: AppProps) {
   const { t } = useTranslation();
@@ -99,7 +100,11 @@ function App({ Component, pageProps }: AppProps) {
         />
       </Head>
       <ToastComponent />
-      <Component {...pageProps} />
+      <PublicConfigProvider
+        value={pageProps?.config ?? pageProps?.homePageData?.config ?? null}
+      >
+        <Component {...pageProps} />
+      </PublicConfigProvider>
     </div>
   );
 }

@@ -7,54 +7,68 @@ import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { LazyImage } from "@/components/lazy-image";
 import { MotionRevealUp } from "@/components/animated-text";
-import { articles } from "@/constants/articles";
+import { getImageUrl } from "@/lib/helper";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { getPostsByCategory, PostListItem } from "@/lib/api/public-read";
+import { usePublicConfig } from "@/lib/public-config-context";
 
-export default function ArticlesArchive() {
+export default function ArticlesArchive({
+  articles,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const locale = (router.query.lang as string) || "zh-HK";
   const [search, setSearch] = useState("");
   const [activeTag, setActiveTag] = useState<string | null>(null);
+  const config = usePublicConfig();
 
-  const articleList = useMemo(() => {
-    return Object.entries(articles).map(([id, langs]) => {
-      const data =
-        langs[locale as "zh" | "en" | "zh-HK"] ||
-        langs["zh-HK"] ||
-        Object.values(langs)[0];
-      return { id, ...data };
-    });
-  }, [locale]);
+  const renderTitleAndSubTitle = () => {
+    switch (locale) {
+      case "en":
+        return {
+          title: config?.["news_title_en"],
+          subtitle: config?.["news_subtitle_en"],
+          more: config?.["news_more_en"],
+          tag: config?.["news_tag_en"],
+        };
+      case "zh-HK":
+        return {
+          title: config?.["news_title_chhk"],
+          subtitle: config?.["news_subtitle_chhk"],
+          more: config?.["news_more_chhk"],
+          tag: config?.["news_tag_chhk"],
+        };
+      default:
+        return {
+          title: config?.["news_title_ch"],
+          subtitle: config?.["news_subtitle_ch"],
+          more: config?.["news_more_ch"],
+          tag: config?.["news_tag_ch"],
+        };
+    }
+  };
 
   const allTags = useMemo(() => {
     const tagSet = new Set<string>();
-    articleList.forEach((a) => a.tags?.forEach((t) => tagSet.add(t)));
+    articles.forEach((a) => a.tags?.forEach((t) => tagSet.add(t)));
     return Array.from(tagSet);
-  }, [articleList]);
+  }, [articles]);
 
   const filtered = useMemo(() => {
-    return articleList.filter((a) => {
+    return articles.filter((a) => {
       const matchSearch =
         !search ||
         a.title.toLowerCase().includes(search.toLowerCase()) ||
-        a.subtitle.toLowerCase().includes(search.toLowerCase());
+        a.excerpt.toLowerCase().includes(search.toLowerCase());
       const matchTag = !activeTag || a.tags?.includes(activeTag);
       return matchSearch && matchTag;
     });
-  }, [articleList, search, activeTag]);
-
-  const pageTitle =
-    locale === "en"
-      ? "News & Insights | CraneR Technology"
-      : "最新動態 | CraneR 可越科技";
+  }, [articles, search, activeTag]);
 
   return (
     <div className="min-h-screen bg-white">
       <Head>
-        <title>{pageTitle}</title>
-        <meta
-          name="description"
-          content="CraneR 最新消息、項目案例與智能建造行業洞察"
-        />
+        <title>{renderTitleAndSubTitle()?.title}</title>
+        <meta name="description" content={renderTitleAndSubTitle()?.subtitle} />
       </Head>
 
       <Nav />
@@ -66,45 +80,15 @@ export default function ArticlesArchive() {
             <div className="flex items-center gap-3 mb-4">
               <div className="w-8 h-px bg-blue-400" />
               <span className="text-blue-400 font-bold text-sm uppercase tracking-[0.2em]">
-                News & Insights
+                {renderTitleAndSubTitle()?.tag}
               </span>
             </div>
             <h1 className="text-3xl md:text-5xl font-bold text-white mb-4 leading-tight">
-              {locale === "en" ? "Latest News" : "最新動態"}
+              {renderTitleAndSubTitle()?.title}
             </h1>
             <p className="text-slate-400 text-base max-w-xl leading-relaxed">
-              {locale === "en"
-                ? "Project highlights, industry insights and technology updates from CraneR."
-                : "CraneR 最新項目案例、行業洞察與技術動態"}
+              {renderTitleAndSubTitle()?.subtitle}
             </p>
-          </MotionRevealUp>
-
-          {/* Search bar */}
-          <MotionRevealUp delay={0.1} className="mt-8 max-w-lg">
-            <div className="relative">
-              <svg
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-              <input
-                type="text"
-                placeholder={
-                  locale === "en" ? "Search articles..." : "搜尋文章..."
-                }
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/10 border border-white/10 text-white placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:bg-white/15 transition-all"
-              />
-            </div>
           </MotionRevealUp>
         </div>
       </div>
@@ -168,13 +152,13 @@ export default function ArticlesArchive() {
                 className="mb-6"
               >
                 <Link
-                  href={`/articles/${filtered[0].id}?lang=${locale}`}
+                  href={`/articles/${filtered[0].slug}?lang=${locale}`}
                   className="group flex flex-col md:flex-row bg-slate-50 hover:bg-white hover:shadow-xl transition-all duration-400 rounded-2xl overflow-hidden border border-slate-100"
                 >
                   <div className="md:w-2/5 overflow-hidden flex-shrink-0">
                     <div className="w-full h-56 md:h-72">
                       <LazyImage
-                        src={filtered[0].coverImage}
+                        src={getImageUrl(filtered[0].coverImageUrl ?? "")}
                         alt={filtered[0].title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
@@ -198,14 +182,18 @@ export default function ArticlesArchive() {
                         {filtered[0].title}
                       </h2>
                       <p className="text-sm text-gray-500 line-clamp-3 leading-relaxed">
-                        {filtered[0].subtitle}
+                        {filtered[0].excerpt}
                       </p>
                     </div>
                     <div className="flex items-center justify-between mt-6">
                       <div className="flex items-center gap-2 text-xs text-slate-400 font-medium">
                         <span>CraneR Technology</span>
                         <span className="opacity-40">•</span>
-                        <span>{filtered[0].date}</span>
+                        <span>
+                          {new Date(filtered[0].publishedAt).toLocaleDateString(
+                            locale,
+                          )}
+                        </span>
                       </div>
                       <span className="text-xs text-blue-600 font-semibold group-hover:underline flex items-center gap-1">
                         {locale === "en" ? "Read more" : "閱讀全文"}
@@ -249,7 +237,7 @@ export default function ArticlesArchive() {
                     >
                       <div className="w-24 h-20 md:w-28 md:h-24 rounded-lg overflow-hidden flex-shrink-0">
                         <LazyImage
-                          src={article.coverImage}
+                          src={getImageUrl(article.coverImageUrl ?? "")}
                           alt={article.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
@@ -272,11 +260,13 @@ export default function ArticlesArchive() {
                             {article.title}
                           </h3>
                           <p className="text-xs text-slate-400 line-clamp-1 leading-relaxed">
-                            {article.subtitle}
+                            {article.excerpt}
                           </p>
                         </div>
                         <p className="text-xs text-slate-400 mt-2">
-                          {article.date}
+                          {new Date(article.publishedAt).toLocaleDateString(
+                            locale,
+                          )}
                         </p>
                       </div>
                     </Link>
@@ -292,3 +282,17 @@ export default function ArticlesArchive() {
     </div>
   );
 }
+
+export const getServerSideProps: GetServerSideProps<{
+  articles: PostListItem[];
+}> = async (ctx) => {
+  const articlesRes = await getPostsByCategory(
+    "news",
+    { pageSize: 8 },
+    { baseUrl: process.env.REQUEST_BASE_URL },
+  );
+  const articles = articlesRes.items ?? [];
+  return {
+    props: { articles },
+  };
+};

@@ -1,4 +1,4 @@
-import type { GetServerSideProps } from "next";
+import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Link from "next/link";
@@ -6,24 +6,17 @@ import { useTranslation } from "next-export-i18n";
 import { LazyImage } from "@/components/lazy-image";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
-import { cases } from "@/constants/cases";
 import { SEO_CONFIG } from "@/constants/seo";
+import { getPostBySlug, PostDetail } from "@/lib/api/public-read";
+import { getImageUrl } from "@/lib/helper";
+import { renderCaseHtmlContent } from "@/lib/render-case-html";
 
-interface CaseDetailProps {
-  id: string;
-}
-
-export default function CaseDetail({ id }: CaseDetailProps) {
+export default function CaseDetail({
+  caseData,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { t } = useTranslation();
   const router = useRouter();
   const locale = (router.query.lang as string) || "zh-HK";
-
-  const getLocaleKey = () => {
-    if (locale.indexOf("zh-TW") !== -1) return "zh-HK";
-    return locale as "zh" | "en" | "zh-HK";
-  };
-
-  const caseData = cases[id]?.[getLocaleKey()];
 
   if (!caseData) {
     return (
@@ -42,21 +35,21 @@ export default function CaseDetail({ id }: CaseDetailProps) {
       ? `${caseData.title} | CraneR Technology - HKCRC`
       : `${caseData.title} | 可越科技 CraneR`;
 
-  const canonicalUrl = `${SEO_CONFIG.siteUrl}/cases/${id}?lang=${locale}`;
+  const canonicalUrl = `${SEO_CONFIG.siteUrl}/cases/${caseData.slug ?? ""}?lang=${locale}`;
 
   return (
     <div className="min-h-screen bg-white">
       <Head>
         <title>{pageTitle}</title>
-        <meta name="description" content={caseData.subtitle} />
+        <meta name="description" content={caseData.excerpt} />
         <link rel="canonical" href={canonicalUrl} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={canonicalUrl} />
         <meta property="og:title" content={pageTitle} />
-        <meta property="og:description" content={caseData.subtitle} />
+        <meta property="og:description" content={caseData.excerpt} />
         <meta
           property="og:image"
-          content={`${SEO_CONFIG.siteUrl}${caseData.coverImage}`}
+          content={`${SEO_CONFIG.siteUrl}${caseData.coverImageUrl}`}
         />
         <meta name="robots" content="index, follow" />
       </Head>
@@ -66,7 +59,7 @@ export default function CaseDetail({ id }: CaseDetailProps) {
       {/* Hero Banner */}
       <div className="relative w-full h-[480px] md:h-[560px] overflow-hidden">
         <LazyImage
-          src={caseData.coverImage}
+          src={getImageUrl(caseData.coverImageUrl ?? "")}
           alt={caseData.title}
           className="w-full h-full object-cover"
         />
@@ -116,40 +109,13 @@ export default function CaseDetail({ id }: CaseDetailProps) {
           <div className="flex-1 min-w-0">
             {/* Subtitle / lead */}
             <p className="text-lg md:text-xl text-gray-600 leading-relaxed mb-10 font-light border-l-4 border-blue-500 pl-5">
-              {caseData.subtitle}
+              {caseData.excerpt}
             </p>
 
             {/* Sections */}
-            {caseData.sections && caseData.sections.length > 0 ? (
-              <div className="space-y-12">
-                {caseData.sections.map((section, idx) => (
-                  <div key={idx}>
-                    <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 flex items-center gap-3">
-                      <span className="w-1 h-6 rounded-full bg-blue-500 inline-block flex-shrink-0" />
-                      {section.heading}
-                    </h2>
-                    {section.image && (
-                      <div className="w-full aspect-video rounded-xl overflow-hidden mb-5">
-                        <LazyImage
-                          src={section.image}
-                          alt={section.heading}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    )}
-                    <div className="text-gray-700 leading-relaxed space-y-3 text-base md:text-[1.05rem]">
-                      {section.body.split("\n\n").map((para, pIdx) => (
-                        <p key={pIdx}>{para}</p>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="prose prose-lg max-w-none text-gray-700">
-                <p className="leading-relaxed">{caseData.content}</p>
-              </div>
-            )}
+            {typeof caseData.content === "string" && caseData.content.trim()
+              ? renderCaseHtmlContent(caseData.content)
+              : null}
           </div>
 
           {/* Sidebar */}
@@ -168,19 +134,26 @@ export default function CaseDetail({ id }: CaseDetailProps) {
                       {labelDate}
                     </p>
                     <p className="text-sm font-medium text-gray-800">
-                      {caseData.date}
+                      {new Date(caseData.publishedAt).toLocaleDateString(
+                        locale,
+                        {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        },
+                      )}
                     </p>
                   </div>
-                  {caseData.partners && caseData.partners.length > 0 && (
-                    <div className="px-5 py-4">
+                  {caseData.client?.split(",").map((client) => (
+                    <div key={client} className="px-5 py-4">
                       <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">
                         {labelPartner}
                       </p>
                       <p className="text-sm font-medium text-gray-800">
-                        {caseData.partners.join(", ")}
+                        {client}
                       </p>
                     </div>
-                  )}
+                  ))}
 
                   {caseData.tags && caseData.tags.length > 0 && (
                     <div className="px-5 py-4">
@@ -223,7 +196,6 @@ export default function CaseDetail({ id }: CaseDetailProps) {
                   <p className="text-sm font-semibold text-gray-800">
                     CraneR Technology
                   </p>
-                  <p className="text-xs text-gray-500">HKCRC · InnoHK</p>
                 </div>
               </div>
             </div>
@@ -236,15 +208,16 @@ export default function CaseDetail({ id }: CaseDetailProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps<CaseDetailProps> = async ({
-  params,
-}) => {
+export const getServerSideProps: GetServerSideProps<{
+  caseData: PostDetail;
+}> = async ({ params }) => {
   const id = params?.id as string;
-  if (!id || !cases[id]) {
+  const caseData = await getPostBySlug(id);
+  if (!id || !caseData) {
     return { notFound: true };
   }
 
   return {
-    props: { id },
+    props: { caseData },
   };
 };

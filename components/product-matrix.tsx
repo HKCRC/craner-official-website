@@ -2,33 +2,44 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
 import { LazyImage } from "./lazy-image";
-import { ProductListItem } from "@/lib/api/public-read";
+import { Config, ProductListItem } from "@/lib/api/public-read";
 import { getImageUrl } from "@/lib/helper";
-
-const ArrowIcon = () => (
-  <svg
-    className="w-4 h-4 transition-transform group-hover:translate-x-1"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M9 5l7 7-7 7"
-    />
-  </svg>
-);
 
 export const ProductMatrix = ({
   products,
+  config,
 }: {
+  config: Config;
   products: ProductListItem[];
 }) => {
   const router = useRouter();
   const locale = (router.query.lang as string) || "zh-HK";
-  const isEn = locale === "en";
+
+  const renderTitleAndSubTitle = () => {
+    switch (locale) {
+      case "en":
+        return {
+          title: config["product_title_en"],
+          subtitle: config["product_subtitle_en"],
+          more: config["product_more_en"],
+          tag: config["product_tag_en"],
+        };
+      case "zh-HK":
+        return {
+          title: config["product_title_chhk"],
+          subtitle: config["product_subtitle_chhk"],
+          more: config["product_more_chhk"],
+          tag: config["product_tag_chhk"],
+        };
+      default:
+        return {
+          title: config["product_title_ch"],
+          subtitle: config["product_subtitle_ch"],
+          more: config["product_more_ch"],
+          tag: config["product_tag_ch"],
+        };
+    }
+  };
 
   return (
     <section className="w-full py-20 px-6 md:px-0">
@@ -46,19 +57,15 @@ export const ProductMatrix = ({
               <div className="flex items-center justify-center gap-3 mb-5">
                 <div className="w-8 h-px bg-blue-300" />
                 <span className="text-blue-600 font-bold text-sm uppercase tracking-[0.2em]">
-                  {isEn ? "Product Matrix" : "產品矩陣"}
+                  {renderTitleAndSubTitle()?.tag}
                 </span>
                 <div className="w-8 h-px bg-blue-300" />
               </div>
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4 leading-tight">
-                {isEn
-                  ? "Full-Stack Smart Construction Solutions"
-                  : "全棧智能建造解決方案"}
+                {renderTitleAndSubTitle()?.title}
               </h2>
               <p className="text-slate-500 max-w-xl mx-auto text-base leading-relaxed">
-                {isEn
-                  ? "From perception and planning to safety monitoring, CraneR delivers an integrated product suite covering the full intelligence lifecycle."
-                  : "從感知、規劃到安全監控，CraneR 提供覆蓋天秤智能化全流程的系統產品"}
+                {renderTitleAndSubTitle()?.subtitle}
               </p>
             </div>
           </div>
@@ -67,7 +74,7 @@ export const ProductMatrix = ({
               href={`/products?lang=${locale}`}
               className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors group"
             >
-              {isEn ? "View All Products" : "查看全部產品"}
+              {renderTitleAndSubTitle()?.more}
               <svg
                 className="w-4 h-4 transition-transform group-hover:translate-x-0.5"
                 fill="none"
@@ -138,7 +145,7 @@ export const ProductMatrix = ({
                       </span>
                     ))}
                   </div>
-                  Stats row
+
                   <div className="grid grid-cols-2 gap-3 border-t border-slate-100 pt-5">
                     {product.featureList.slice(0, 2).map((feature) => (
                       <div key={feature.label}>
@@ -150,11 +157,6 @@ export const ProductMatrix = ({
                         </p>
                       </div>
                     ))}
-                  </div>
-                  {/* CTA */}
-                  <div className="flex items-center gap-1.5 mt-5 text-sm font-semibold text-blue-600 group-hover:text-blue-700">
-                    了解詳情
-                    <ArrowIcon />
                   </div>
                 </div>
               </Link>

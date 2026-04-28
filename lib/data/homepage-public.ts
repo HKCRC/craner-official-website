@@ -1,19 +1,26 @@
 import {
+  Config,
   getContactInfos,
   getFeaturedProducts,
   getHomepageBanners,
+  getPostsByCategory,
   getProducts,
+  PostListItem,
   ProductListItem,
   type ContactInfo,
   type FeaturedProduct,
   type HomepageBanner,
 } from "@/lib/api/public-read";
+import { getPublicConfigCached } from "@/lib/data/public-config-cache";
 
 export type HomePagePublicPayload = {
   banners: HomepageBanner[];
   featuredProducts: FeaturedProduct[];
-  products: ProductListItem[];
+  products: ProductListItem[];  
   contacts: ContactInfo[];
+  config: Config;
+  cases: PostListItem[];
+  articles: PostListItem[];
 };
 
 /**
@@ -25,11 +32,14 @@ export async function loadHomePagePublicData(init?: {
 }): Promise<HomePagePublicPayload> {
   const fetchInit = init?.baseUrl ? { baseUrl: init.baseUrl } : {};
 
-  const [bannersRes, productsRes, featuredRes, contactsRes] = await Promise.allSettled([
+  const [bannersRes, productsRes, featuredRes, contactsRes, configRes, casesRes, articlesRes] = await Promise.allSettled([
     getHomepageBanners(fetchInit),
     getProducts({ pageSize: 8 }, fetchInit),
     getFeaturedProducts({ take: 8 }, fetchInit),
     getContactInfos(fetchInit),
+    getPublicConfigCached(fetchInit),
+    getPostsByCategory("cases", { pageSize: 8 }, fetchInit),
+    getPostsByCategory("news", { pageSize: 8 }, fetchInit),
   ]); 
 
   return {
@@ -41,5 +51,11 @@ export async function loadHomePagePublicData(init?: {
       featuredRes.status === "fulfilled" ? featuredRes.value.items : [],
     contacts:
       contactsRes.status === "fulfilled" ? contactsRes.value.contacts : [],
+    config:
+      configRes.status === "fulfilled" ? configRes.value : {},
+    cases:
+      casesRes.status === "fulfilled" ? casesRes.value.items : [],
+    articles:
+      articlesRes.status === "fulfilled" ? articlesRes.value.items : [],
   };
 }

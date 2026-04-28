@@ -45,6 +45,9 @@ export default function Lite({
   const { banners } = homePageData;
   const { featuredProducts } = homePageData;
   const { products } = homePageData;
+  const { config } = homePageData;
+  const { cases } = homePageData;
+  const { articles } = homePageData;
 
   useEffect(() => {
     const control = animate(position, [50, 100, 100, 0, 0, 50], {
@@ -61,13 +64,13 @@ export default function Lite({
 
       <Header homepageBanners={homePageData?.banners} />
 
-      <ProductMatrix products={products} />
+      <ProductMatrix products={products} config={config} />
 
       {/* <VideoIntro /> */}
 
-      <CasesSection />
+      <CasesSection config={config} cases={cases} />
 
-      <BusinessSwiper />
+      <BusinessSwiper featuredProducts={featuredProducts} />
 
       <ParallaxSection
         imageSrc="/img/tower.jpg"
@@ -76,7 +79,7 @@ export default function Lite({
         height="h-[400px] md:h-[400px]"
       />
 
-      <NewsSection />
+      <NewsSection articles={articles} />
 
       <CooperativePartner />
 

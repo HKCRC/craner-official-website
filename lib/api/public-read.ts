@@ -135,11 +135,14 @@ export type ContactInfo = {
   socialLinks: Array<{ platform: string; url: string }>;
 };
 
+export type Config = Record<string, string>;
+
 export type FeaturedProductMedia =
   | { type: "carousel"; images: string[] }
   | { type: "video"; url: string };
 
 export type FeaturedProduct = {
+  id: string;
   order: number;
   title: string;
   subtitle: string;
@@ -147,6 +150,10 @@ export type FeaturedProduct = {
   productName: string;
   tags: string[];
   media: FeaturedProductMedia;
+  featureList: Array<{
+    label: string;
+    value: string;
+  }>;
 };
 
 export type PublicApiErrorBody = { ok: false; error: string };
@@ -280,7 +287,7 @@ export async function getPostBySlug(
     );
   }
   if (isNotFoundBody(body)) return null;
-  return body as PostDetail;
+  return (body as { ok: true; post: PostDetail }).post;
 }
 
 /** GET /api/posts/by-category/:categorySlug */
@@ -354,6 +361,7 @@ export async function getHomepageBanners(
   return readJson("/api/public/homepage-banner", undefined, init);
 }
 
+
 /** GET /api/public/homepage-banner?locale= */
 export async function getHomepageBannerByLocale(
   locale: PublicApiLocale,
@@ -392,6 +400,11 @@ export async function getContactInfos(
   return readJson("/api/public/contact-info", undefined, init);
 }
 
+export async function getConfig(
+  init?: PublicReadFetchOptions
+): Promise<{ ok: true; data: Config }> {
+  return readJson("/api/public/config", undefined, init);
+}
 /** GET /api/public/contact-info?locale= */
 export async function getContactInfoByLocale(
   locale: PublicApiLocale,
