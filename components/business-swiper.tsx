@@ -7,13 +7,6 @@ import { FeaturedProduct } from "@/lib/api/public-read";
 import { useRouter } from "next/router";
 import { getImageUrl } from "@/lib/helper";
 
-const partners = [
-  "CraneR AI Safety System",
-  "Safety Supervision System",
-  "AI Crane Control System",
-  "4S : Site Safety System",
-];
-
 export const BusinessSwiper = ({
   featuredProducts,
 }: {
@@ -22,7 +15,9 @@ export const BusinessSwiper = ({
   const { t } = useTranslation();
   const router = useRouter();
   const locale = (router.query.lang as string) || "zh-HK";
-  const [activeProduct, setActiveProduct] = useState(featuredProducts[0]);
+  const [activeProduct, setActiveProduct] = useState(featuredProducts?.[0]);
+
+  if (!activeProduct) return null;
 
   const productData = t(`business_swiper.partners.${activeProduct.id}`);
 

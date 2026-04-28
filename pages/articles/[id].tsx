@@ -128,6 +128,7 @@ export const getServerSideProps: GetServerSideProps<{
 }> = async ({ params }) => {
   const id = params?.id as string;
   const fetchInit = { baseUrl: process.env.REQUEST_BASE_URL };
+
   const [article, config, products] = await Promise.all([
     getPostBySlug(id, fetchInit),
     getPublicConfigCached(fetchInit),

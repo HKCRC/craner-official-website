@@ -14,7 +14,7 @@ import {
   type PostListItem,
 } from "@/lib/api/public-read";
 import { getPublicConfigCached } from "@/lib/data/public-config-cache";
-import { getImageUrl } from "@/lib/helper";
+import { getImageUrl, langToCategory } from "@/lib/helper";
 import { usePublicConfig } from "@/lib/public-config-context";
 
 const outfit = Outfit({ subsets: ["latin"] });
@@ -106,6 +106,14 @@ export default function CasesArchive({
         </Link>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {cases.length === 0 && (
+            <div className="flex flex-col items-center justify-center h-full col-span-full">
+              <p className="text-gray-500 font-light text-center">
+                {t("no_cases_found") || "没有找到案例"}
+              </p>
+            </div>
+          )}
+
           {cases.map((data, idx) => (
             <MotionRevealUp
               key={data.id}
@@ -194,8 +202,10 @@ export const getServerSideProps: GetServerSideProps<{
   cases: PostListItem[];
   config: Config;
 }> = async (ctx) => {
+  const currentLang = (ctx.query.lang as string) || "zh-HK";
+  const category = langToCategory(currentLang);
   const casesRes = await getPostsByCategory(
-    "cases",
+    `cases-${category}`,
     { pageSize: 8 },
     { baseUrl: process.env.REQUEST_BASE_URL },
   );

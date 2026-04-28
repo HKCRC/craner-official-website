@@ -14,7 +14,7 @@ import {
   type ProductListItem,
 } from "@/lib/api/public-read";
 import { getProductsCached } from "@/lib/data/products-cache";
-import { getImageUrl } from "@/lib/helper";
+import { getImageUrl, langToCategory } from "@/lib/helper";
 import { usePublicConfig } from "@/lib/public-config-context";
 import { getPublicConfigCached } from "@/lib/data/public-config-cache";
 import { useTranslation } from "next-export-i18n";
@@ -107,6 +107,14 @@ export default function ProductsArchive({
         </Link>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {productList.length === 0 && (
+            <div className="flex flex-col items-center justify-center h-full col-span-full">
+              <p className="text-gray-500 font-light text-center">
+                {t("no_products_found") || "没有找到产品"}
+              </p>
+            </div>
+          )}
+
           {productList.map((product, idx) => (
             <motion.div
               key={product.id}
@@ -207,9 +215,13 @@ export const getServerSideProps: GetServerSideProps<{
   products: Paginated<ProductListItem>;
   config: Config;
 }> = async (ctx) => {
-  const products = await getProductsCached(undefined, {
-    baseUrl: process.env.REQUEST_BASE_URL,
-  });
+  const category = langToCategory(ctx.query.lang as string);
+  const products = await getProductsCached(
+    { pageSize: 8 },
+    { baseUrl: process.env.REQUEST_BASE_URL },
+    undefined,
+    `product-${category}`,
+  );
   const config = await getPublicConfigCached({
     baseUrl: process.env.REQUEST_BASE_URL,
   });

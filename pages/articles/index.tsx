@@ -7,7 +7,7 @@ import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { LazyImage } from "@/components/lazy-image";
 import { MotionRevealUp } from "@/components/animated-text";
-import { getImageUrl } from "@/lib/helper";
+import { getImageUrl, langToCategory } from "@/lib/helper";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import {
   getPostsByCategory,
@@ -268,8 +268,10 @@ export const getServerSideProps: GetServerSideProps<{
   articles: PostListItem[];
   config: Config;
 }> = async (ctx) => {
+  const category = langToCategory(ctx.query.lang as string);
+
   const articlesRes = await getPostsByCategory(
-    "news",
+    `news-${category}`,
     { pageSize: 8 },
     { baseUrl: process.env.REQUEST_BASE_URL },
   );

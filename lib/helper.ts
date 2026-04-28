@@ -10,3 +10,15 @@ export const getImageUrl = (url: string) => {
     "";
   return `${baseUrl}${url}`;
 };
+
+export const langToCategory = (lang: string) => {
+  const currentLang = (lang as string) || "zh-HK";
+  switch (currentLang) {
+    case "zh-HK":
+      return "hk";
+    case "en":
+      return "en";
+    default:
+      return "cn";
+  }
+};
