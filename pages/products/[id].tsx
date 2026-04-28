@@ -15,10 +15,11 @@ import {
   type ProductDetail,
   type ProductQABlock,
 } from "@/lib/api/public-read";
-import { getImageUrl } from "@/lib/helper";
+import { getImageUrl, langToCategory } from "@/lib/helper";
 import { getPublicConfigCached } from "@/lib/data/public-config-cache";
 import { getProductsCached } from "@/lib/data/products-cache";
 import type { Paginated, ProductListItem } from "@/lib/api/public-read";
+import { useTranslation } from "next-export-i18n";
 
 interface ProductPageProps {
   id: string;
@@ -197,6 +198,7 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
 export default function ProductPage({ product }: { product: ProductDetail }) {
   const router = useRouter();
   const locale = (router.query.lang as string) || "zh-HK";
+  const { t } = useTranslation();
 
   if (!product) {
     return (
@@ -280,7 +282,7 @@ export default function ProductPage({ product }: { product: ProductDetail }) {
               d="M15 19l-7-7 7-7"
             />
           </svg>
-          {locale === "en" ? "Back to Products" : "返回產品列表"}
+          {t("back_to_products") || "返回產品列表"}
         </Link>
 
         {/* Carousel + intro */}
@@ -472,7 +474,7 @@ export default function ProductPage({ product }: { product: ProductDetail }) {
             {/* Contact CTA */}
             <div className="mt-10 rounded-2xl bg-blue-50 border border-blue-100 p-8 text-center">
               <p className="text-slate-600 mb-4 text-sm leading-relaxed">
-                仍有疑問？我們的專業團隊隨時為您解答，提供定制化諮詢服務
+                {t("have_questions")}
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <a
@@ -492,13 +494,13 @@ export default function ProductPage({ product }: { product: ProductDetail }) {
                       d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                     />
                   </svg>
-                  發送郵件
+                  {t("send_email") || "发送邮件"}
                 </a>
                 <Link
                   href={`/products?lang=${locale}`}
                   className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full border border-blue-200 text-blue-600 text-sm font-semibold hover:bg-blue-50 transition-colors"
                 >
-                  {locale === "en" ? "All Products" : "所有產品"}
+                  {t("all_products") || "所有產品"}
                 </Link>
               </div>
             </div>
@@ -518,10 +520,16 @@ export const getServerSideProps: GetServerSideProps<{
 }> = async ({ params }) => {
   const id = params?.id as string;
   const fetchInit = { baseUrl: process.env.REQUEST_BASE_URL };
+  const currentLang = langToCategory(params?.lang as string);
   const [product, config, products] = await Promise.all([
     getProductBySlug(id, fetchInit),
     getPublicConfigCached(fetchInit),
-    getProductsCached({ pageSize: 50 }, fetchInit),
+    getProductsCached(
+      { pageSize: 50 },
+      fetchInit,
+      undefined,
+      `product-${currentLang}`,
+    ),
   ]);
   if (!product) {
     return { notFound: true };

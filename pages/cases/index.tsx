@@ -11,6 +11,7 @@ import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import {
   getPostsByCategory,
   type Config,
+  type PostsByCategoryResponse,
   type PostListItem,
 } from "@/lib/api/public-read";
 import { getPublicConfigCached } from "@/lib/data/public-config-cache";
@@ -26,6 +27,9 @@ export default function CasesArchive({
   const router = useRouter();
   const locale = (router.query.lang as string) || "zh-HK";
   const config = usePublicConfig();
+  const page = cases.page;
+  const totalPages = Math.max(1, cases.totalPages || 1);
+  const caseItems = cases.items ?? [];
 
   const renderTitleAndSubTitle = () => {
     switch (locale) {
@@ -106,7 +110,7 @@ export default function CasesArchive({
         </Link>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {cases.length === 0 && (
+          {caseItems.length === 0 && (
             <div className="flex flex-col items-center justify-center h-full col-span-full">
               <p className="text-gray-500 font-light text-center">
                 {t("no_cases_found") || "没有找到案例"}
@@ -114,7 +118,7 @@ export default function CasesArchive({
             </div>
           )}
 
-          {cases.map((data, idx) => (
+          {caseItems.map((data, idx) => (
             <MotionRevealUp
               key={data.id}
               delay={0.05 * idx}
@@ -191,6 +195,93 @@ export default function CasesArchive({
             </MotionRevealUp>
           ))}
         </div>
+
+        {/* Pagination (always show) */}
+        <div className="mt-12 flex items-center justify-center gap-2">
+          <Link
+            href={`/cases?lang=${locale}&page=${Math.max(1, page - 1)}`}
+            className={`px-3 py-2 rounded-lg border text-sm font-semibold transition-colors ${
+              page <= 1
+                ? "pointer-events-none opacity-40 border-slate-200 text-slate-400"
+                : "border-slate-200 text-slate-600 hover:border-blue-200 hover:text-blue-600"
+            }`}
+            aria-disabled={page <= 1}
+            aria-label="Previous page"
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+          </Link>
+
+          {Array.from({ length: totalPages }, (_, i) => i + 1)
+            .filter((p) => {
+              const nearCurrent = Math.abs(p - page) <= 2;
+              const edge = p === 1 || p === totalPages;
+              return nearCurrent || edge;
+            })
+            .reduce<number[]>((acc, p) => {
+              if (!acc.length) return [p];
+              const last = acc[acc.length - 1];
+              if (p - last > 1) acc.push(-1);
+              acc.push(p);
+              return acc;
+            }, [])
+            .map((p, idx) =>
+              p === -1 ? (
+                <span key={`gap-${idx}`} className="px-2 text-slate-400">
+                  …
+                </span>
+              ) : (
+                <Link
+                  key={p}
+                  href={`/cases?lang=${locale}&page=${p}`}
+                  className={`w-10 h-10 rounded-lg flex items-center justify-center text-sm font-semibold border transition-colors ${
+                    p === page
+                      ? "bg-blue-600 border-blue-600 text-white"
+                      : "bg-white border-slate-200 text-slate-600 hover:border-blue-200 hover:text-blue-600"
+                  }`}
+                  aria-current={p === page ? "page" : undefined}
+                >
+                  {p}
+                </Link>
+              ),
+            )}
+
+          <Link
+            href={`/cases?lang=${locale}&page=${Math.min(totalPages, page + 1)}`}
+            className={`px-3 py-2 rounded-lg border text-sm font-semibold transition-colors ${
+              page >= totalPages
+                ? "pointer-events-none opacity-40 border-slate-200 text-slate-400"
+                : "border-slate-200 text-slate-600 hover:border-blue-200 hover:text-blue-600"
+            }`}
+            aria-disabled={page >= totalPages}
+            aria-label="Next page"
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </Link>
+        </div>
       </div>
 
       <Footer />
@@ -199,21 +290,24 @@ export default function CasesArchive({
 }
 
 export const getServerSideProps: GetServerSideProps<{
-  cases: PostListItem[];
+  cases: PostsByCategoryResponse;
   config: Config;
 }> = async (ctx) => {
   const currentLang = (ctx.query.lang as string) || "zh-HK";
   const category = langToCategory(currentLang);
+  const pageParam = Array.isArray(ctx.query.page)
+    ? ctx.query.page[0]
+    : ctx.query.page;
+  const page = Math.max(1, Number.parseInt(pageParam ?? "1", 10) || 1);
   const casesRes = await getPostsByCategory(
     `cases-${category}`,
-    { pageSize: 8 },
+    { page, pageSize: 9 },
     { baseUrl: process.env.REQUEST_BASE_URL },
   );
   const config = await getPublicConfigCached({
     baseUrl: process.env.REQUEST_BASE_URL,
   });
-  const cases = casesRes.items ?? [];
   return {
-    props: { cases, config },
+    props: { cases: casesRes, config },
   };
 };

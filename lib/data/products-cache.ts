@@ -36,10 +36,12 @@ export async function getProductsCached(
   const now = Date.now();
   const hit = cache.get(key);
   if (hit && hit.expiresAt > now) return hit.value;
+  
   const res = await getProducts(
     { ...(params ?? {}), category: categorySlug?.toString() },
     init,
   );
+
   cache.set(key, { value: res, expiresAt: now + ttlMs });
   return res;
 }

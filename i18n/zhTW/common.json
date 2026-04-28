@@ -169,6 +169,13 @@
   "back_home": "返回主頁",
   "no_cases_found": "沒有找到案例",
   "no_products_found": "沒有找到產品",
+  "no_articles_found": "沒有找到相關文章",
+  "read_more": "閱讀全文",
+  "case_info": "案例資料",
+  "back_to_products": "返回產品列表",
+  "all_products": "所有產品",
+  "have_questions": "仍有疑問？ 我們的專業團隊隨時為您解答，提供定制化諮詢服務",
+  "send_email": "發送郵件",
   "cases_section": {
     "title": "合作成功案例",
     "subtitle": "我們與政府部門、法定機構及科研機構攜手合作，將前沿智能建造技術落地應用於真實工程項目。",

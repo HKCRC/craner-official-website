@@ -5,7 +5,6 @@ import { MotionRevealUp } from "./animated-text";
 import { LazyImage } from "./lazy-image";
 import { FeaturedProduct } from "@/lib/api/public-read";
 import { useRouter } from "next/router";
-import { getImageUrl } from "@/lib/helper";
 
 export const BusinessSwiper = ({
   featuredProducts,

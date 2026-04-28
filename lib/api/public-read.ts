@@ -145,6 +145,7 @@ export type FeaturedProductMedia =
 export type FeaturedProduct = {
   id: string;
   order: number;
+  locale: "en" | "zh" | "zh-hk";
   title: string;
   subtitle: string;
   description: string;

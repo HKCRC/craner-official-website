@@ -26,8 +26,6 @@ export default function CaseDetail({
   const router = useRouter();
   const locale = (router.query.lang as string) || "zh-HK";
 
-  console.error(JSON.stringify(caseData, null, 2));
-
   if (!caseData) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -135,7 +133,7 @@ export default function CaseDetail({
               <div className="rounded-2xl border border-gray-100 bg-gray-50 overflow-hidden">
                 <div className="bg-blue-600 px-5 py-3">
                   <span className="text-white text-sm font-semibold tracking-wide uppercase">
-                    {locale === "en" ? "Case Info" : "案例資料"}
+                    {t("case_info") || "案例資料"}
                   </span>
                 </div>
                 <div className="divide-y divide-gray-100">

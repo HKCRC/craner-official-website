@@ -14,6 +14,8 @@ import { Header } from "@/components/header";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { loadHomePagePublicData } from "@/lib/data/homepage-public";
+import { langToCategory } from "@/lib/helper";
+import { useRouter } from "next/router";
 
 const outfit = Outfit({ subsets: ["latin"] });
 
@@ -49,7 +51,8 @@ export default function Lite({
   homePageData,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { t } = useTranslation();
-
+  const router = useRouter();
+  const locale = (router.query.lang as string)?.toLowerCase() || "zh-hk";
   const position = useMotionValue(0);
   const { banners } = homePageData;
   const { featuredProducts } = homePageData;
@@ -79,7 +82,11 @@ export default function Lite({
 
       <CasesSection config={config} cases={cases} />
 
-      <BusinessSwiper featuredProducts={featuredProducts} />
+      <BusinessSwiper
+        featuredProducts={featuredProducts.filter(
+          (product) => product.locale === locale,
+        )}
+      />
 
       <ParallaxSection
         imageSrc="/img/tower.jpg"

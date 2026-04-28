@@ -1,4 +1,3 @@
-import { useState, useMemo } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -11,8 +10,8 @@ import { getImageUrl, langToCategory } from "@/lib/helper";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import {
   getPostsByCategory,
-  PostListItem,
   type Config,
+  type PostsByCategoryResponse,
 } from "@/lib/api/public-read";
 import { usePublicConfig } from "@/lib/public-config-context";
 import { getPublicConfigCached } from "@/lib/data/public-config-cache";
@@ -25,6 +24,9 @@ export default function ArticlesArchive({
   const locale = (router.query.lang as string) || "zh-HK";
   const config = usePublicConfig();
   const { t } = useTranslation();
+  const page = articles.page;
+  const totalPages = Math.max(1, articles.totalPages || 1);
+  const articleItems = articles.items ?? [];
   const renderTitleAndSubTitle = () => {
     switch (locale) {
       case "en":
@@ -103,7 +105,7 @@ export default function ArticlesArchive({
           {t("back_home") || "返回主页"}
         </Link>
 
-        {articles.length === 0 ? (
+        {articleItems.length === 0 ? (
           <div className="text-center py-24 text-slate-400">
             <svg
               className="w-12 h-12 mx-auto mb-4 opacity-40"
@@ -119,13 +121,13 @@ export default function ArticlesArchive({
               />
             </svg>
             <p className="text-sm">
-              {locale === "en" ? "No articles found" : "找不到相關文章"}
+              {t("no_articles_found") || "没有找到相关文章"}
             </p>
           </div>
         ) : (
           <>
             {/* First article — featured wide card */}
-            {articles[0] && (
+            {articleItems[0] && (
               <motion.div
                 initial={{ y: 16, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -133,23 +135,23 @@ export default function ArticlesArchive({
                 className="mb-6"
               >
                 <Link
-                  href={`/articles/${articles[0].slug}?lang=${locale}`}
+                  href={`/articles/${articleItems[0].slug}?lang=${locale}`}
                   className="group flex flex-col md:flex-row bg-slate-50 hover:bg-white hover:shadow-xl transition-all duration-400 rounded-2xl overflow-hidden border border-slate-100"
                 >
                   <div className="md:w-2/5 overflow-hidden flex-shrink-0">
                     <div className="w-full h-56 md:h-72">
                       <LazyImage
-                        src={getImageUrl(articles[0].coverImageUrl ?? "")}
-                        alt={articles[0].title}
+                        src={getImageUrl(articleItems[0].coverImageUrl ?? "")}
+                        alt={articleItems[0].title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                     </div>
                   </div>
                   <div className="flex flex-col justify-between p-7 md:p-10 flex-1">
                     <div>
-                      {articles[0].tags && (
+                      {articleItems[0].tags && (
                         <div className="flex flex-wrap gap-2 mb-4">
-                          {articles[0].tags.slice(0, 4).map((tag) => (
+                          {articleItems[0].tags.slice(0, 4).map((tag) => (
                             <span
                               key={tag}
                               className="text-xs px-2.5 py-1 rounded-full bg-blue-50 text-blue-600 font-medium"
@@ -160,10 +162,10 @@ export default function ArticlesArchive({
                         </div>
                       )}
                       <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors leading-snug">
-                        {articles[0].title}
+                        {articleItems[0].title}
                       </h2>
                       <p className="text-sm text-gray-500 line-clamp-3 leading-relaxed">
-                        {articles[0].excerpt}
+                        {articleItems[0].excerpt}
                       </p>
                     </div>
                     <div className="flex items-center justify-between mt-6">
@@ -171,9 +173,9 @@ export default function ArticlesArchive({
                         <span>CraneR Technology</span>
                         <span className="opacity-40">•</span>
                         <span>
-                          {new Date(articles[0].publishedAt).toLocaleDateString(
-                            locale,
-                          )}
+                          {new Date(
+                            articleItems[0].publishedAt,
+                          ).toLocaleDateString(locale)}
                         </span>
                       </div>
                       <span className="text-xs text-blue-600 font-semibold group-hover:underline flex items-center gap-1">
@@ -199,9 +201,9 @@ export default function ArticlesArchive({
             )}
 
             {/* Rest — 2-column card grid */}
-            {articles.length > 1 && (
+            {articleItems.length > 1 && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                {articles.slice(1).map((article, idx) => (
+                {articleItems.slice(1).map((article, idx) => (
                   <motion.div
                     key={article.id}
                     initial={{ y: 16, opacity: 0 }}
@@ -257,6 +259,93 @@ export default function ArticlesArchive({
             )}
           </>
         )}
+
+        {/* Pagination (always show) */}
+        <div className="mt-12 flex items-center justify-center gap-2">
+          <Link
+            href={`/articles?lang=${locale}&page=${Math.max(1, page - 1)}`}
+            className={`px-3 py-2 rounded-lg border text-sm font-semibold transition-colors ${
+              page <= 1
+                ? "pointer-events-none opacity-40 border-slate-200 text-slate-400"
+                : "border-slate-200 text-slate-600 hover:border-blue-200 hover:text-blue-600"
+            }`}
+            aria-disabled={page <= 1}
+            aria-label="Previous page"
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+          </Link>
+
+          {Array.from({ length: totalPages }, (_, i) => i + 1)
+            .filter((p) => {
+              const nearCurrent = Math.abs(p - page) <= 2;
+              const edge = p === 1 || p === totalPages;
+              return nearCurrent || edge;
+            })
+            .reduce<number[]>((acc, p) => {
+              if (!acc.length) return [p];
+              const last = acc[acc.length - 1];
+              if (p - last > 1) acc.push(-1);
+              acc.push(p);
+              return acc;
+            }, [])
+            .map((p, idx) =>
+              p === -1 ? (
+                <span key={`gap-${idx}`} className="px-2 text-slate-400">
+                  …
+                </span>
+              ) : (
+                <Link
+                  key={p}
+                  href={`/articles?lang=${locale}&page=${p}`}
+                  className={`w-10 h-10 rounded-lg flex items-center justify-center text-sm font-semibold border transition-colors ${
+                    p === page
+                      ? "bg-blue-600 border-blue-600 text-white"
+                      : "bg-white border-slate-200 text-slate-600 hover:border-blue-200 hover:text-blue-600"
+                  }`}
+                  aria-current={p === page ? "page" : undefined}
+                >
+                  {p}
+                </Link>
+              ),
+            )}
+
+          <Link
+            href={`/articles?lang=${locale}&page=${Math.min(totalPages, page + 1)}`}
+            className={`px-3 py-2 rounded-lg border text-sm font-semibold transition-colors ${
+              page >= totalPages
+                ? "pointer-events-none opacity-40 border-slate-200 text-slate-400"
+                : "border-slate-200 text-slate-600 hover:border-blue-200 hover:text-blue-600"
+            }`}
+            aria-disabled={page >= totalPages}
+            aria-label="Next page"
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </Link>
+        </div>
       </div>
 
       <Footer />
@@ -265,21 +354,24 @@ export default function ArticlesArchive({
 }
 
 export const getServerSideProps: GetServerSideProps<{
-  articles: PostListItem[];
+  articles: PostsByCategoryResponse;
   config: Config;
 }> = async (ctx) => {
   const category = langToCategory(ctx.query.lang as string);
+  const pageParam = Array.isArray(ctx.query.page)
+    ? ctx.query.page[0]
+    : ctx.query.page;
+  const page = Math.max(1, Number.parseInt(pageParam ?? "1", 10) || 1);
 
   const articlesRes = await getPostsByCategory(
     `news-${category}`,
-    { pageSize: 8 },
+    { page, pageSize: 9 },
     { baseUrl: process.env.REQUEST_BASE_URL },
   );
   const config = await getPublicConfigCached({
     baseUrl: process.env.REQUEST_BASE_URL,
   });
-  const articles = articlesRes.items ?? [];
   return {
-    props: { articles, config },
+    props: { articles: articlesRes, config },
   };
 };
