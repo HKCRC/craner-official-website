@@ -305,7 +305,11 @@ export const getServerSideProps: GetServerSideProps<{
     : ctx.query.page;
   const page = Math.max(1, Number.parseInt(pageParam ?? "1", 10) || 1);
   const [casesRes, config, contacts] = await Promise.all([
-    getPostsByCategoryCached(`cases-${category}`, { page, pageSize: 9 }, fetchInit),
+    getPostsByCategoryCached(
+      `cases-${category}`,
+      { page, pageSize: 9 },
+      fetchInit,
+    ),
     getPublicConfigCached(fetchInit),
     getContactsCached(fetchInit),
   ]);

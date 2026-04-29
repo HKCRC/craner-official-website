@@ -309,7 +309,7 @@ export default function ProductPage({
             <div className="flex items-center gap-3 mb-5">
               <div className="w-1.5 h-6 bg-blue-600 shrink-0" />
               <span className="text-blue-600 font-bold text-sm uppercase tracking-[0.2em]">
-                產品概覽
+                {t("product_overview") || "產品概覽"}
               </span>
             </div>
             <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-5 leading-snug">
@@ -468,10 +468,11 @@ export default function ProductPage({
                 <div className="w-8 h-px bg-blue-300" />
               </div>
               <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-3">
-                常見問題解答
+                {t("faq_title") || "常见问题解答"}
               </h2>
               <p className="text-slate-400 text-sm">
-                如有其他疑問，歡迎聯絡我們的銷售及技術團隊
+                {t("faq_subtitle") ||
+                  "如有其他疑问，欢迎联系我们的销售及技术团队"}
               </p>
             </div>
 

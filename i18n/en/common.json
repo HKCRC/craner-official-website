@@ -181,6 +181,12 @@
   "send_email": "Send Email",
   "company_address": "Company Address",
   "business_cooperation": "Business Cooperation",
+  "product_overview": "Product Overview",
+
+  "faq": "FAQ",
+  "faq_title": "Frequently Asked Questions",
+  "faq_subtitle": "If you have any other questions, please contact our sales and technical team.",
+  "faq_button": "Contact Us",
   "cases_section": {
     "title": "Collaboration Success Cases",
     "subtitle": "We partner with government departments, statutory bodies, and research institutions to bring cutting-edge intelligent construction technology to real engineering projects.",
