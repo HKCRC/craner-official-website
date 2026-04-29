@@ -36,10 +36,7 @@ export default function Document() {
         
         {/* IE Compatibility */}
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-        
-        {/* Security Headers */}
-        <meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests" />
-        
+        {/* Avoid meta CSP upgrade-insecure-requests: it rewrites same-origin http assets to https and breaks http:// deployments. */}
         {/* Publisher Information */}
         <meta name="publisher" content="CraneR Technology Limited" />
         <meta name="copyright" content="© 2024-2026 CraneR Technology Limited. All rights reserved." />
