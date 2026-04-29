@@ -212,11 +212,6 @@ export const BusinessSwiper = ({
                 />
               )}
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-slate-200 rounded-full flex items-center justify-center">
-                  <span className="text-[8px] font-black text-slate-500 uppercase">
-                    {product.title}
-                  </span>
-                </div>
                 <span
                   className={`text-sm font-black uppercase tracking-widest ${
                     activeProduct.id === product.id
