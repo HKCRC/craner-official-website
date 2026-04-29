@@ -245,9 +245,7 @@ export default function ProductPage({
               </span>
             ))}
           </div>
-          <p className="text-blue-300 text-sm font-semibold uppercase tracking-[0.15em] mb-2">
-            {product.slug}
-          </p>
+
           <h1 className="text-3xl md:text-5xl font-bold text-white leading-tight max-w-2xl">
             {product.title}
           </h1>
