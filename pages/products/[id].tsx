@@ -10,6 +10,7 @@ import { Footer } from "@/components/footer";
 import { MotionRevealUp } from "@/components/animated-text";
 import {
   getProductBySlug,
+  type ContactInfo,
   type ProductBlock,
   type Config,
   type ProductDetail,
@@ -18,6 +19,7 @@ import {
 import { getImageUrl, langToCategory } from "@/lib/helper";
 import { getPublicConfigCached } from "@/lib/data/public-config-cache";
 import { getProductsCached } from "@/lib/data/products-cache";
+import { getContactsCached } from "@/lib/data/contacts-cache";
 import type { Paginated, ProductListItem } from "@/lib/api/public-read";
 import { useTranslation } from "next-export-i18n";
 
@@ -195,7 +197,13 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
   );
 }
 
-export default function ProductPage({ product }: { product: ProductDetail }) {
+export default function ProductPage({
+  product,
+  contacts,
+}: {
+  product: ProductDetail;
+  contacts: ContactInfo[];
+}) {
   const router = useRouter();
   const locale = (router.query.lang as string) || "zh-HK";
   const { t } = useTranslation();
@@ -400,11 +408,13 @@ export default function ProductPage({ product }: { product: ProductDetail }) {
                   return (
                     <MotionRevealUp key={block.id}>
                       <div className="w-full rounded-2xl overflow-hidden bg-slate-100">
-                        <LazyImage
-                          src={getImageUrl(block.image.url)}
-                          alt={product.title}
-                          className="w-full h-auto object-cover"
-                        />
+                        <Link href={block.image.link ?? ""} target="_blank">
+                          <LazyImage
+                            src={getImageUrl(block.image.url)}
+                            alt={product.title}
+                            className="w-full h-auto object-cover"
+                          />
+                        </Link>
                       </div>
                     </MotionRevealUp>
                   );
@@ -415,18 +425,22 @@ export default function ProductPage({ product }: { product: ProductDetail }) {
                     <MotionRevealUp key={block.id}>
                       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div className="rounded-2xl overflow-hidden bg-slate-100 aspect-[4/3]">
-                          <LazyImage
-                            src={getImageUrl(block.left.url)}
-                            alt={`${product.title} left`}
-                            className="w-full h-full object-cover"
-                          />
+                          <Link href={block.left.link ?? ""} target="_blank">
+                            <LazyImage
+                              src={getImageUrl(block.left.url)}
+                              alt={`${product.title} left`}
+                              className="w-full h-full object-cover"
+                            />
+                          </Link>
                         </div>
                         <div className="rounded-2xl overflow-hidden bg-slate-100 aspect-[4/3]">
-                          <LazyImage
-                            src={getImageUrl(block.right.url)}
-                            alt={`${product.title} right`}
-                            className="w-full h-full object-cover"
-                          />
+                          <Link href={block.right.link ?? ""} target="_blank">
+                            <LazyImage
+                              src={getImageUrl(block.right.url)}
+                              alt={`${product.title} right`}
+                              className="w-full h-full object-cover"
+                            />
+                          </Link>
                         </div>
                       </div>
                     </MotionRevealUp>
@@ -508,7 +522,7 @@ export default function ProductPage({ product }: { product: ProductDetail }) {
         </MotionRevealUp>
       </div>
 
-      <Footer />
+      <Footer contacts={contacts} />
     </div>
   );
 }
@@ -517,11 +531,12 @@ export const getServerSideProps: GetServerSideProps<{
   product: Awaited<ReturnType<typeof getProductBySlug>>;
   config: Config;
   products: Paginated<ProductListItem>;
+  contacts: ContactInfo[];
 }> = async ({ params }) => {
   const id = params?.id as string;
   const fetchInit = { baseUrl: process.env.REQUEST_BASE_URL };
   const currentLang = langToCategory(params?.lang as string);
-  const [product, config, products] = await Promise.all([
+  const [product, config, products, contacts] = await Promise.all([
     getProductBySlug(id, fetchInit),
     getPublicConfigCached(fetchInit),
     getProductsCached(
@@ -530,9 +545,10 @@ export const getServerSideProps: GetServerSideProps<{
       undefined,
       `product-${currentLang}`,
     ),
+    getContactsCached(fetchInit),
   ]);
   if (!product) {
     return { notFound: true };
   }
-  return { props: { product, config, products } };
+  return { props: { product, config, products, contacts } };
 };

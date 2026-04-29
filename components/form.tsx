@@ -2,12 +2,15 @@
 import { useForm, SubmitHandler, type FieldError } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { useIsCN } from "@/scripts/utils";
+import { useRouter } from "next/router";
 import { useTranslation } from "next-export-i18n";
 import { businessEmail } from "@/constants";
 import Link from "next/link";
+import { useContacts } from "@/lib/contacts-context";
+import { pickContactForRouterLang } from "@/lib/pick-contact-for-lang";
+import { getImageUrl } from "@/lib/helper";
 
 const ENDPOINT =
   "https://env-1gy344xr89dc3a71-1251089768.ap-shanghai.app.tcloudbase.com/submit";
@@ -108,7 +111,16 @@ export default function WaitingListForm({ onClose }: { onClose: () => void }) {
   } = useForm<Inputs>({
     resolver: zodResolver(formSchema),
   });
-  const isCN = useIsCN();
+  const router = useRouter();
+  const contacts = useContacts();
+  const contact = useMemo(
+    () =>
+      pickContactForRouterLang(
+        contacts ?? [],
+        router.query.lang as string | undefined,
+      ),
+    [contacts, router.query.lang],
+  );
   const { t } = useTranslation();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -131,18 +143,13 @@ export default function WaitingListForm({ onClose }: { onClose: () => void }) {
     }
   }, []);
 
-  const enableSubmitAgain = () => {
-    localStorage.setItem("craner-waitlist-submitted", "");
-    setIsSubmitted(false);
-  };
-
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
       setIsSubmitting(true);
       const mergedData = {
         ...data,
         preferred_feat: Object.keys(interestMap).filter(
-          (key) => interestMap[key]
+          (key) => interestMap[key],
         ),
         device_info: navigator.userAgent,
       };
@@ -172,7 +179,7 @@ export default function WaitingListForm({ onClose }: { onClose: () => void }) {
     title: string,
     id: keyof Inputs,
     placeholder: string,
-    required = true
+    required = true,
   ) => {
     return (
       <FormControl title={title} required={required} error={errors[id]}>
@@ -189,7 +196,7 @@ export default function WaitingListForm({ onClose }: { onClose: () => void }) {
     title: string,
     id: keyof Inputs,
     options: string[],
-    required = true
+    required = true,
   ) => {
     return (
       <FormControl title={title} required={required} error={errors[id]}>
@@ -309,63 +316,92 @@ export default function WaitingListForm({ onClose }: { onClose: () => void }) {
           <div className="mb-2">
             <>
               <div className="divider text-gray-400">{t("form.wechat")}</div>
-              <div className="grid grid-cols-3 justify-items-center items-center mt-5 mb-6 px-2">
-                <div className="flex flex-col items-center">
-                  <img
-                    src="/img/wx_qrcode.png"
-                    className="w-24 z h-24 lg:w-32 lg:h-32 ml-3 mr-3"
-                    alt="wechat qr"
-                  />
-                  <a
-                    href="https://wa.me/64378432?text=Hello, I'm interested in your services."
-                    target="_blank"
-                    className="text-[10px] bg-gray-500 mt-1 border border-gray-50 rounded-full px-2 py-1"
-                  >
-                    WhatsApp
-                  </a>
+              {contact?.qrCodes && contact.qrCodes.length > 0 ? (
+                <div className="flex flex-row justify-center items-center gap-4 mt-5 mb-6 px-2">
+                  {contact.qrCodes.map((qr) => {
+                    const src = getImageUrl(qr.imageUrl ?? "");
+                    return (
+                      <div
+                        key={`${qr.label}-${qr.imageUrl}`}
+                        className="flex flex-col items-center"
+                      >
+                        <img
+                          src={src}
+                          className="w-24 h-24 lg:w-32 lg:h-32 ml-3 mr-3 object-contain"
+                          alt={qr.label}
+                        />
+                        {qr.link ? (
+                          <a
+                            href={qr.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[10px] bg-gray-500 mt-1 border border-gray-50 rounded-full px-2 py-1"
+                          >
+                            {qr.label}
+                          </a>
+                        ) : (
+                          <p className="text-[10px] bg-gray-500 mt-1 border border-gray-50 rounded-full px-2 py-1">
+                            {qr.label}
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
-                <div className="flex flex-col items-center">
-                  <img
-                    src="/img/hgwhatsapp.png"
-                    className="w-24 z h-24 lg:w-32 lg:h-32 ml-3 mr-3"
-                    alt="wechat qr"
-                  />
-                  <a
-                    href="https://wa.me/64876758?text=Hello, I'm interested in your services."
-                    target="_blank"
-                    className="text-[10px] bg-gray-500 mt-1 border border-gray-50 rounded-full px-2 py-1"
-                  >
-                    WhatsApp
-                  </a>
+              ) : (
+                <div className="grid grid-cols-3 justify-items-center items-center mt-5 mb-6 px-2">
+                  <div className="flex flex-col items-center">
+                    <img
+                      src="/img/wx_qrcode.png"
+                      className="w-24 z h-24 lg:w-32 lg:h-32 ml-3 mr-3"
+                      alt="wechat qr"
+                    />
+                    <a
+                      href="https://wa.me/64378432?text=Hello, I'm interested in your services."
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[10px] bg-gray-500 mt-1 border border-gray-50 rounded-full px-2 py-1"
+                    >
+                      WhatsApp
+                    </a>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <img
+                      src="/img/hgwhatsapp.png"
+                      className="w-24 z h-24 lg:w-32 lg:h-32 ml-3 mr-3"
+                      alt="wechat qr"
+                    />
+                    <a
+                      href="https://wa.me/64876758?text=Hello, I'm interested in your services."
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[10px] bg-gray-500 mt-1 border border-gray-50 rounded-full px-2 py-1"
+                    >
+                      WhatsApp
+                    </a>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <img
+                      src="/img/hgwx.png"
+                      className="w-24 z h-24 lg:w-32 lg:h-32 ml-3 mr-3"
+                      alt="wechat qr"
+                    />
+                    <p className="text-[10px] bg-gray-500 mt-1 border border-gray-50 rounded-full px-2 py-1">
+                      Wechat
+                    </p>
+                  </div>
                 </div>
-                <div className="flex flex-col items-center">
-                  <img
-                    src="/img/hgwx.png"
-                    className="w-24 z h-24 lg:w-32 lg:h-32 ml-3 mr-3"
-                    alt="wechat qr"
-                  />
-                  <p className="text-[10px] bg-gray-500 mt-1 border border-gray-50 rounded-full px-2 py-1">
-                    Wechat
-                  </p>
-                </div>
-              </div>
+              )}
             </>
-            {/* {isCN ? (
-            <>
-              <div className="divider text-gray-400">{t("form.wechat")}</div>
-              <img src="/img/wechat_qr.png" className="w-36 h-36 m-auto" alt="wechat qr" />
-            </>
-          ) : (
-            <div className="h-24">
-              <div className="divider text-gray-400">{t("form.ph")}</div>
-              <PHLogo />
-            </div>
-          )} */}
 
-            <a href={`mailto:${businessEmail}`}>Email: {businessEmail}</a>
-            <p>Tel: +852 64378432</p>
-            <p>+86 13926508390</p>
-            <p>+852 64876758</p>
+            <a href={`mailto:${contact?.email?.trim() || businessEmail}`}>
+              Email: {contact?.email?.trim() || businessEmail}
+            </a>
+            {contact?.phone?.split("，").map((phone) => (
+              <>
+                <p key={phone}>Tel: {phone.trim()}</p>
+              </>
+            ))}
 
             <Link
               href="https://ncnd27zbzpqm.feishu.cn/share/base/form/shrcna3DVeWa4aT72cjiAZF7v9c"
@@ -414,14 +450,14 @@ export default function WaitingListForm({ onClose }: { onClose: () => void }) {
             {renderTextInput(
               t("form.company"),
               "company",
-              t("form.company-inc")
+              t("form.company-inc"),
             )}
           </div>
           <div>
             {renderSelectInput(
               t("form.company-size"),
               "company_size",
-              companySizes
+              companySizes,
             )}
           </div>
         </div>
@@ -434,7 +470,7 @@ export default function WaitingListForm({ onClose }: { onClose: () => void }) {
               t("form.contact-method"),
               "contact_method",
               contactMethods,
-              false
+              false,
             )}
           </div>
           <div className="col-span-2">
@@ -442,7 +478,7 @@ export default function WaitingListForm({ onClose }: { onClose: () => void }) {
               t("form.number-or-id"),
               "contact_number",
               t("form.phone-or-social-media-id"),
-              false
+              false,
             )}
           </div>
         </div>

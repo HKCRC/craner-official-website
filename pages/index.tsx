@@ -14,7 +14,6 @@ import { Header } from "@/components/header";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { loadHomePagePublicData } from "@/lib/data/homepage-public";
-import { langToCategory } from "@/lib/helper";
 import { useRouter } from "next/router";
 
 const outfit = Outfit({ subsets: ["latin"] });
@@ -58,8 +57,13 @@ export default function Lite({
   const { featuredProducts } = homePageData;
   const { products } = homePageData;
   const { config } = homePageData;
+  const { contacts } = homePageData;
   const { cases } = homePageData;
   const { articles } = homePageData;
+
+  const filteredFeaturedProducts = featuredProducts.filter(
+    (product) => product.locale === locale,
+  );
 
   useEffect(() => {
     const control = animate(position, [50, 100, 100, 0, 0, 50], {
@@ -82,11 +86,7 @@ export default function Lite({
 
       <CasesSection config={config} cases={cases} />
 
-      <BusinessSwiper
-        featuredProducts={featuredProducts.filter(
-          (product) => product.locale === locale,
-        )}
-      />
+      <BusinessSwiper featuredProducts={filteredFeaturedProducts} />
 
       <ParallaxSection
         imageSrc="/img/tower.jpg"
@@ -99,7 +99,7 @@ export default function Lite({
 
       <CooperativePartner />
 
-      <Footer />
+      <Footer contacts={contacts} />
     </main>
   );
 }

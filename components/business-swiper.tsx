@@ -1,24 +1,39 @@
-import { useState } from "react";
-import { useTranslation } from "next-export-i18n";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MotionRevealUp } from "./animated-text";
 import { LazyImage } from "./lazy-image";
 import { FeaturedProduct } from "@/lib/api/public-read";
-import { useRouter } from "next/router";
 
 export const BusinessSwiper = ({
   featuredProducts,
 }: {
   featuredProducts: FeaturedProduct[];
 }) => {
-  const { t } = useTranslation();
-  const router = useRouter();
-  const locale = (router.query.lang as string) || "zh-HK";
-  const [activeProduct, setActiveProduct] = useState(featuredProducts?.[0]);
+  const [activeProduct, setActiveProduct] = useState<
+    FeaturedProduct | undefined
+  >(featuredProducts?.[0]);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    if (!featuredProducts?.length) {
+      setActiveProduct(undefined);
+      setActiveIndex(0);
+      return;
+    }
+
+    setActiveProduct((prev) => {
+      if (!prev) return featuredProducts[0];
+      const matched = featuredProducts.find((p) => p.id === prev.id);
+      return matched ?? featuredProducts[0];
+    });
+
+    return () => {
+      setActiveProduct(undefined);
+      setActiveIndex(0);
+    };
+  }, [featuredProducts]);
 
   if (!activeProduct) return null;
-
-  const productData = t(`business_swiper.partners.${activeProduct.id}`);
 
   const renderImage = (partner: string) => {
     switch (partner) {
@@ -65,15 +80,15 @@ export const BusinessSwiper = ({
     }
   };
 
-  const renderBackground = (order: number) => {
-    switch (order) {
-      case 1:
+  const renderBackground = () => {
+    switch (activeIndex) {
+      case 0:
         return "bg-gradient-to-t from-[#4AA7DDBB] via-[#E8EDF0B4]";
-      case 2:
+      case 1:
         return "bg-gradient-to-t from-[#FF000095] via-[#FF000072]";
-      case 3:
+      case 2:
         return "bg-gradient-to-t from-[#FEA90098] via-[#FFD88F92]";
-      case 4:
+      case 3:
         return "bg-gradient-to-t from-[#FA79009D] via-[#E8EDF0B4]";
       default:
         return "bg-gradient-to-t from-[#4aa7dd] via-[#e8edf094]";
@@ -143,15 +158,15 @@ export const BusinessSwiper = ({
                   {/* Mock Background Image */}
 
                   <div
-                    className={`absolute inset-0 left-0 bottom-0 w-full h-full ${renderBackground(activeProduct.order)} z-10`}
+                    className={`absolute inset-0 left-0 bottom-0 w-full h-full ${renderBackground()} z-10`}
                   ></div>
 
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="text-white/10 font-black text-9xl uppercase tracking-tighter select-none">
                       {renderImage(
                         activeProduct.media.type === "carousel"
-                          ? activeProduct.media.images[0]
-                          : activeProduct.media.url,
+                          ? (activeProduct?.media?.images?.[0] ?? "")
+                          : (activeProduct?.media?.url ?? ""),
                       )}
                     </div>
                   </div>
@@ -176,10 +191,13 @@ export const BusinessSwiper = ({
 
         {/* Bottom Logo Selector */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 border-b border-slate-200">
-          {featuredProducts.map((product) => (
+          {featuredProducts.map((product, index) => (
             <div
               key={product.id}
-              onClick={() => setActiveProduct(product)}
+              onClick={() => {
+                setActiveProduct(product);
+                setActiveIndex(index);
+              }}
               className={`group flex items-center justify-center p-4 rounded-2xl cursor-pointer transition-all duration-300 relative  ${
                 activeProduct.id === product.id
                   ? ""

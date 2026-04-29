@@ -9,12 +9,14 @@ import { LazyImage } from "@/components/lazy-image";
 import { MotionRevealUp } from "@/components/animated-text";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import {
-  getPostsByCategory,
   type Config,
+  type ContactInfo,
   type PostsByCategoryResponse,
   type PostListItem,
 } from "@/lib/api/public-read";
+import { getPostsByCategoryCached } from "@/lib/data/posts-by-category-cache";
 import { getPublicConfigCached } from "@/lib/data/public-config-cache";
+import { getContactsCached } from "@/lib/data/contacts-cache";
 import { getImageUrl, langToCategory } from "@/lib/helper";
 import { usePublicConfig } from "@/lib/public-config-context";
 
@@ -22,6 +24,7 @@ const outfit = Outfit({ subsets: ["latin"] });
 
 export default function CasesArchive({
   cases,
+  contacts,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { t } = useTranslation();
   const router = useRouter();
@@ -284,7 +287,7 @@ export default function CasesArchive({
         </div>
       </div>
 
-      <Footer />
+      <Footer contacts={contacts} />
     </div>
   );
 }
@@ -292,22 +295,21 @@ export default function CasesArchive({
 export const getServerSideProps: GetServerSideProps<{
   cases: PostsByCategoryResponse;
   config: Config;
+  contacts: ContactInfo[];
 }> = async (ctx) => {
+  const fetchInit = { baseUrl: process.env.REQUEST_BASE_URL };
   const currentLang = (ctx.query.lang as string) || "zh-HK";
   const category = langToCategory(currentLang);
   const pageParam = Array.isArray(ctx.query.page)
     ? ctx.query.page[0]
     : ctx.query.page;
   const page = Math.max(1, Number.parseInt(pageParam ?? "1", 10) || 1);
-  const casesRes = await getPostsByCategory(
-    `cases-${category}`,
-    { page, pageSize: 9 },
-    { baseUrl: process.env.REQUEST_BASE_URL },
-  );
-  const config = await getPublicConfigCached({
-    baseUrl: process.env.REQUEST_BASE_URL,
-  });
+  const [casesRes, config, contacts] = await Promise.all([
+    getPostsByCategoryCached(`cases-${category}`, { page, pageSize: 9 }, fetchInit),
+    getPublicConfigCached(fetchInit),
+    getContactsCached(fetchInit),
+  ]);
   return {
-    props: { cases: casesRes, config },
+    props: { cases: casesRes, config, contacts },
   };
 };

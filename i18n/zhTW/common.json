@@ -37,6 +37,9 @@
     "title2": "用技術和創新驅動建築行業未來",
     "title3": "助力行業智能化轉型"
   },
+  "hero_carousel": {
+    "kicker": "焦點"
+  },
   "video_prompts_module": {
     "feature_01_title": "讓工程現場，全面進入智能時代",
     "feature_01_intro": "從智能天秤到 AI 安全系統，再到高精度智能吊運設備，CraneR 構建覆蓋「感知—決策—執行」的工程智能產品矩陣，持續為建造行業創造可量化的價值提升。",
@@ -176,6 +179,8 @@
   "all_products": "所有產品",
   "have_questions": "仍有疑問？ 我們的專業團隊隨時為您解答，提供定制化諮詢服務",
   "send_email": "發送郵件",
+  "company_address": "公司地址",
+  "business_cooperation": "商務合作",
   "cases_section": {
     "title": "合作成功案例",
     "subtitle": "我們與政府部門、法定機構及科研機構攜手合作，將前沿智能建造技術落地應用於真實工程項目。",

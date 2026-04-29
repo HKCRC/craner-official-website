@@ -85,14 +85,14 @@ export type ProductTextImageBlock = {
 export type ProductFullImageBlock = {
   id: string;
   type: "full-image";
-  image: { url: string };
+  image: { url: string, link?: string };
 };
 
 export type ProductImageImageBlock = {
   id: string;
   type: "image-image";
-  left: { url: string };
-  right: { url: string };
+  left: { url: string, link?: string };
+  right: { url: string, link?: string };
 };
 
 export type ProductQABlock = {
@@ -103,7 +103,7 @@ export type ProductQABlock = {
 };
 
 export type HomepageBannerCarouselContent = {
-  slides: Array<{ title: string; subtitle: string; imageUrl: string }>;
+  slides: Array<{ title: string; subtitle: string; imageUrl: string; link?: string }>;
 };
 
 export type HomepageBannerVideoContent = {
@@ -126,13 +126,10 @@ export type HomepageBanner =
 
 export type ContactInfo = {
   locale: PublicApiLocale;
-  address1Region: string;
-  address1Detail: string;
-  address2Region: string;
-  address2Detail: string;
+  addresses: Array<{ region: string; detail: string }>;
   phone: string;
   email: string;
-  qrCodes: Array<{ label: string; imageUrl: string }>;
+  qrCodes: Array<{ label: string; imageUrl: string, link?: string }>;
   socialLinks: Array<{ platform: string; url: string }>;
 };
 

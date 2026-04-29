@@ -30,16 +30,16 @@ export const LanguageSwitcher = ({
           query: { ...router.query, lang: detectedLang },
         },
         undefined,
-        { shallow: true },
+        { scroll: false },
       );
     }
   }, [router]);
 
   const switchLang = (lang: string) => {
-    router.push(
+    router.replace(
       { pathname: router.pathname, query: { ...router.query, lang } },
       undefined,
-      { shallow: true },
+      { scroll: false },
     );
   };
 

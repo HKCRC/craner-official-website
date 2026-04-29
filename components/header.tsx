@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { useWindowSize } from "react-use";
 import { MotionRevealUp } from "./animated-text";
 import { useRouter } from "next/router";
@@ -7,6 +8,8 @@ import { subtitleGradient2 } from "@/constants";
 import type { HomepageBanner } from "@/lib/api/public-read";
 import { getTextGradientStyle } from "./text-block";
 import { getImageUrl } from "@/lib/helper";
+import { LazyImage } from "./lazy-image";
+import Link from "next/link";
 
 type CarouselSlide = Extract<
   HomepageBanner,
@@ -157,28 +160,48 @@ export const Header = ({
             >
               {slides.map((slide) => (
                 <div key={slide.imageUrl} className="w-full h-full shrink-0">
-                  <img
-                    src={getImageUrl(slide.imageUrl)}
-                    alt={slide.title}
-                    className="object-cover w-full h-full"
-                    loading="eager"
-                  />
+                  <Link
+                    href={slide.link ? slide.link : `/?lang=${currentLang}`}
+                  >
+                    <LazyImage
+                      src={getImageUrl(slide.imageUrl)}
+                      alt={slide.title}
+                      className="object-cover w-full h-full"
+                      loading="eager"
+                    />
+                  </Link>
                 </div>
               ))}
             </div>
 
-            {/* 文案：左下角排版（跟菜单不冲突） */}
+            {/* 文案：与新闻区一致的层级 — 装饰线 + kicker + 标题 + 左侧强调副文 */}
             <div className="absolute inset-0 z-20 flex items-end pointer-events-none">
-              <div className="w-full max-w-5xl mx-auto px-6 md:px-10 pb-10 md:pb-14">
-                <div className="max-w-2xl">
-                  <div className="text-white font-bold tracking-tight drop-shadow-sm text-3xl md:text-5xl leading-tight">
-                    {activeSlide?.title}
-                  </div>
-                  {activeSlide?.subtitle ? (
-                    <div className="mt-3 text-white/90 drop-shadow-sm text-base md:text-xl leading-relaxed">
-                      {activeSlide.subtitle}
-                    </div>
-                  ) : null}
+              <div className="w-full max-w-6xl mx-auto px-6 md:px-10 pb-12 md:pb-[4.25rem]">
+                <div className="max-w-3xl">
+                  <AnimatePresence mode="wait">
+                    {activeSlide ? (
+                      <motion.div
+                        key={activeIndex}
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{
+                          duration: 0.38,
+                          ease: [0.22, 1, 0.36, 1],
+                        }}
+                        className="relative rounded-2xl border border-white/[0.12] bg-gradient-to-br from-black/45 via-black/25 to-transparent px-5 py-6 md:px-8 md:py-8 backdrop-blur-[6px] shadow-[0_8px_40px_-12px_rgba(0,0,0,0.55)]"
+                      >
+                        <h2 className="text-2xl sm:text-3xl md:text-[2.45rem] font-bold text-white tracking-tight leading-[1.18] [text-shadow:0_2px_28px_rgba(0,0,0,0.5)]">
+                          {activeSlide.title}
+                        </h2>
+                        {activeSlide.subtitle ? (
+                          <p className="mt-4 md:mt-5 max-w-xl text-sm md:text-lg text-white/88 leading-relaxed border-l-[3px] border-sky-400 pl-4 md:pl-5">
+                            {activeSlide.subtitle}
+                          </p>
+                        ) : null}
+                      </motion.div>
+                    ) : null}
+                  </AnimatePresence>
                 </div>
               </div>
             </div>

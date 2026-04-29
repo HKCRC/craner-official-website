@@ -37,6 +37,9 @@
     "title2": "用技术和创新驱动建筑行业未来",
     "title3": "助力行业智能化转型"
   },
+  "hero_carousel": {
+    "kicker": "焦点"
+  },
   "video_prompts_module": {
     "feature_01_title": "让工程现场，全面进入智能时代",
     "feature_01_intro": "从智能塔吊到 AI 安全系统，再到高精度智能吊运设备，CraneR 构建覆盖“感知—决策—执行”的工程智能产品矩阵，持续为建造行业创造可量化的价值提升",
@@ -176,6 +179,8 @@
   "back_to_products": "返回产品列表",
   "have_questions": "仍有疑問？我们的专业团队随时为您解答，提供定制化咨询服务",
   "send_email": "发送邮件",
+  "company_address": "公司地址",
+  "business_cooperation": "商务合作",
   "cases_section": {
     "title": "合作成功案例",
     "subtitle": "我们与政府部门、法定机构及科研机构携手合作，将前沿智能建造技术落地应用于真实工程项目。",

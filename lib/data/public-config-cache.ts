@@ -1,32 +1,33 @@
 import { getConfig, type Config } from "@/lib/api/public-read";
 
 type CacheState = {
-  value: Config | null;
+  value: Config;
   expiresAt: number;
 };
 
-let cache: CacheState = {
-  value: null,
-  expiresAt: 0,
-};
+const cacheByBaseUrl = new Map<string, CacheState>();
+
+function cacheKey(init?: Parameters<typeof getConfig>[0]) {
+  return init?.baseUrl ?? "";
+}
 
 /**
  * Server-side in-memory cache for public config.
- * - Shared across requests within the same Node process
+ * - Keyed by `init.baseUrl` so different upstream origins do not collide
  * - TTL-based to avoid stale config forever
  */
 export async function getPublicConfigCached(
   init?: Parameters<typeof getConfig>[0],
   ttlMs: number = 5 * 60 * 1000,
 ): Promise<Config> {
+  const key = cacheKey(init);
   const now = Date.now();
-  if (cache.value && cache.expiresAt > now) return cache.value;
+  const hit = cacheByBaseUrl.get(key);
+  if (hit && hit.expiresAt > now) return hit.value;
 
   const res = await getConfig(init);
-  cache = {
-    value: res.data ?? {},
-    expiresAt: now + ttlMs,
-  };
-  return cache.value ?? {};
+  const value = res.data ?? {};
+  cacheByBaseUrl.set(key, { value, expiresAt: now + ttlMs });
+  return value;
 }
 

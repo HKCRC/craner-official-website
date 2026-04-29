@@ -37,6 +37,9 @@
     "title2": "Driving the Future of Construction with Technology and Innovation",
     "title3": "Empowering Industry Intelligent Transformation"
   },
+  "hero_carousel": {
+    "kicker": "Highlights"
+  },
   "video_prompts_module": {
     "feature_01_title": "Bringing Construction Sites Fully into the Intelligent Era",
     "feature_01_intro": "From intelligent tower cranes to AI safety systems, to high-precision intelligent lifting equipment, CraneR builds an engineering intelligence product matrix covering 'Perception—Decision—Execution', continuously creating quantifiable value improvements for the construction industry.",
@@ -176,6 +179,8 @@
   "back_to_products": "Back to Products",
   "have_questions": "Have questions? Our professional team is always ready to answer your questions and provide customized consultation services.",
   "send_email": "Send Email",
+  "company_address": "Company Address",
+  "business_cooperation": "Business Cooperation",
   "cases_section": {
     "title": "Collaboration Success Cases",
     "subtitle": "We partner with government departments, statutory bodies, and research institutions to bring cutting-edge intelligent construction technology to real engineering projects.",

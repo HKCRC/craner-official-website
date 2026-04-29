@@ -1,15 +1,15 @@
 import {
   Config,
-  getContactInfos,
-  getFeaturedProducts,
-  getHomepageBanners,
-  getPostsByCategory,
   PostListItem,
   ProductListItem,
   type ContactInfo,
   type FeaturedProduct,
   type HomepageBanner,
 } from "@/lib/api/public-read";
+import { getContactsCached } from "@/lib/data/contacts-cache";
+import { getFeaturedProductsCached } from "@/lib/data/featured-products-cache";
+import { getHomepageBannersCached } from "@/lib/data/homepage-banners-cache";
+import { getPostsByCategoryCached } from "@/lib/data/posts-by-category-cache";
 import { getPublicConfigCached } from "@/lib/data/public-config-cache";
 import { getProductsCached } from "@/lib/data/products-cache";
 
@@ -34,15 +34,22 @@ export async function loadHomePagePublicData(init?: {
   const fetchInit = init?.baseUrl ? { baseUrl: init.baseUrl } : {};
   const currentLang = `${init?.currentLang ? `-${init?.currentLang}` : ""}`;
 
-  const [bannersRes, productsRes, featuredRes, contactsRes, configRes, casesRes, articlesRes] = await Promise.allSettled([
-    getHomepageBanners(fetchInit),
+  const [
+    bannersRes,
+    productsRes,
+    featuredRes,
+    contactsRes,
+    configRes,
+    casesRes,
+    articlesRes,
+  ] = await Promise.allSettled([
+    getHomepageBannersCached(fetchInit),
     getProductsCached({ pageSize: 8 }, fetchInit, undefined, `product${currentLang}`),
-    getFeaturedProducts({ take: 8 }, fetchInit),
-    getContactInfos(fetchInit),
+    getFeaturedProductsCached({ take: 8 }, fetchInit),
+    getContactsCached(fetchInit),
     getPublicConfigCached(fetchInit),
-    getPostsByCategory(`cases${currentLang}`, { pageSize: 8 }, fetchInit),
-    getPostsByCategory(`cases${currentLang}`, { pageSize: 8 }, fetchInit),
-    getPostsByCategory(`news${currentLang}`, { pageSize: 8 }, fetchInit),
+    getPostsByCategoryCached(`cases${currentLang}`, { pageSize: 8 }, fetchInit),
+    getPostsByCategoryCached(`news${currentLang}`, { pageSize: 8 }, fetchInit),
   ]); 
 
   return {
@@ -53,7 +60,7 @@ export async function loadHomePagePublicData(init?: {
     featuredProducts:
       featuredRes.status === "fulfilled" ? featuredRes.value.items : [],
     contacts:
-      contactsRes.status === "fulfilled" ? contactsRes.value.contacts : [],
+      contactsRes.status === "fulfilled" ? contactsRes.value : [],
     config:
       configRes.status === "fulfilled" ? configRes.value : {},
     cases:

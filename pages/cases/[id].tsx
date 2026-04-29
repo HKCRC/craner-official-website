@@ -10,6 +10,7 @@ import { SEO_CONFIG } from "@/constants/seo";
 import {
   getPostBySlug,
   type Config,
+  type ContactInfo,
   type Paginated,
   PostDetail,
   type ProductListItem,
@@ -18,9 +19,11 @@ import { getImageUrl } from "@/lib/helper";
 import { renderCaseHtmlContent } from "@/lib/render-case-html";
 import { getPublicConfigCached } from "@/lib/data/public-config-cache";
 import { getProductsCached } from "@/lib/data/products-cache";
+import { getContactsCached } from "@/lib/data/contacts-cache";
 
 export default function CaseDetail({
   caseData,
+  contacts,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { t } = useTranslation();
   const router = useRouter();
@@ -211,7 +214,7 @@ export default function CaseDetail({
         </div>
       </div>
 
-      <Footer />
+      <Footer contacts={contacts} />
     </div>
   );
 }
@@ -220,19 +223,21 @@ export const getServerSideProps: GetServerSideProps<{
   caseData: PostDetail;
   config: Config;
   products: Paginated<ProductListItem>;
+  contacts: ContactInfo[];
 }> = async ({ params }) => {
   const id = params?.id as string;
   const fetchInit = { baseUrl: process.env.REQUEST_BASE_URL };
-  const [caseData, config, products] = await Promise.all([
+  const [caseData, config, products, contacts] = await Promise.all([
     getPostBySlug(id, fetchInit),
     getPublicConfigCached(fetchInit),
     getProductsCached({ pageSize: 50 }, fetchInit),
+    getContactsCached(fetchInit),
   ]);
   if (!id || !caseData) {
     return { notFound: true };
   }
 
   return {
-    props: { caseData, config, products },
+    props: { caseData, config, products, contacts },
   };
 };

@@ -13,9 +13,12 @@ export const CooperativePartner = () => {
             key={idx}
           >
             {partnerList.map((item, idx2) => (
-              <a href="" className={styles.reviews_card} key={idx2}>
-                <LazyImage className="h-8 md:h-8 mr-2" src={item.url} alt="" />
-              </a>
+              <LazyImage
+                className="h-8 md:h-8 mr-2"
+                src={item.url}
+                alt=""
+                key={idx2}
+              />
             ))}
           </div>
         ))}

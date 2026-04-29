@@ -11,6 +11,7 @@ import {
 } from "@/constants/seo";
 import { PublicConfigProvider } from "@/lib/public-config-context";
 import { ProductsProvider } from "@/lib/products-context";
+import { ContactsProvider } from "@/lib/contacts-context";
 
 function App({ Component, pageProps }: AppProps) {
   const { t } = useTranslation();
@@ -135,7 +136,13 @@ function App({ Component, pageProps }: AppProps) {
             pageProps?.products?.items ?? pageProps?.homePageData?.products ?? null
           }
         >
-          <Component {...pageProps} />
+          <ContactsProvider
+            value={
+              pageProps?.contacts ?? pageProps?.homePageData?.contacts ?? null
+            }
+          >
+            <Component {...pageProps} />
+          </ContactsProvider>
         </ProductsProvider>
       </PublicConfigProvider>
     </div>

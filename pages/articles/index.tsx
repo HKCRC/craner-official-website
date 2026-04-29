@@ -9,16 +9,19 @@ import { MotionRevealUp } from "@/components/animated-text";
 import { getImageUrl, langToCategory } from "@/lib/helper";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import {
-  getPostsByCategory,
   type Config,
+  type ContactInfo,
   type PostsByCategoryResponse,
 } from "@/lib/api/public-read";
+import { getPostsByCategoryCached } from "@/lib/data/posts-by-category-cache";
 import { usePublicConfig } from "@/lib/public-config-context";
 import { getPublicConfigCached } from "@/lib/data/public-config-cache";
+import { getContactsCached } from "@/lib/data/contacts-cache";
 import { useTranslation } from "next-export-i18n";
 
 export default function ArticlesArchive({
   articles,
+  contacts,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const locale = (router.query.lang as string) || "zh-HK";
@@ -179,7 +182,7 @@ export default function ArticlesArchive({
                         </span>
                       </div>
                       <span className="text-xs text-blue-600 font-semibold group-hover:underline flex items-center gap-1">
-                        {locale === "en" ? "Read more" : "閱讀全文"}
+                        {t("read_more") || "阅读全文"}
                         <svg
                           className="w-3.5 h-3.5"
                           fill="none"
@@ -348,7 +351,7 @@ export default function ArticlesArchive({
         </div>
       </div>
 
-      <Footer />
+      <Footer contacts={contacts} />
     </div>
   );
 }
@@ -356,22 +359,21 @@ export default function ArticlesArchive({
 export const getServerSideProps: GetServerSideProps<{
   articles: PostsByCategoryResponse;
   config: Config;
+  contacts: ContactInfo[];
 }> = async (ctx) => {
+  const fetchInit = { baseUrl: process.env.REQUEST_BASE_URL };
   const category = langToCategory(ctx.query.lang as string);
   const pageParam = Array.isArray(ctx.query.page)
     ? ctx.query.page[0]
     : ctx.query.page;
   const page = Math.max(1, Number.parseInt(pageParam ?? "1", 10) || 1);
 
-  const articlesRes = await getPostsByCategory(
-    `news-${category}`,
-    { page, pageSize: 9 },
-    { baseUrl: process.env.REQUEST_BASE_URL },
-  );
-  const config = await getPublicConfigCached({
-    baseUrl: process.env.REQUEST_BASE_URL,
-  });
+  const [articlesRes, config, contacts] = await Promise.all([
+    getPostsByCategoryCached(`news-${category}`, { page, pageSize: 9 }, fetchInit),
+    getPublicConfigCached(fetchInit),
+    getContactsCached(fetchInit),
+  ]);
   return {
-    props: { articles: articlesRes, config },
+    props: { articles: articlesRes, config, contacts },
   };
 };

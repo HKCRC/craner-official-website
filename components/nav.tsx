@@ -41,17 +41,21 @@ export const Nav = ({ products }: { products?: ProductListItem[] }) => {
   const dropdownTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    // If we already have products via props/context, skip fetching.
-    if (products && products.length) return;
-    if (productsFromContext && productsFromContext.length) return;
-    if (clientProducts !== null) return; // already fetched (success or failure)
+    // If we already have products via props/context, skip client fetch.
+    if (products?.length) return;
+    if (productsFromContext?.length) return;
+
+    // Drop stale client list when locale or upstream sources change, then refetch.
+    // (Previously `clientProducts !== null` blocked refetch after lang switch, so the
+    // dropdown kept the previous locale while `resolved` could briefly be [].)
+    setClientProducts(null);
 
     let cancelled = false;
     (async () => {
       try {
         const category =
           locale === "en"
-            ? "product"
+            ? "product-en"
             : locale === "zh"
               ? "product-cn"
               : "product-hk";
@@ -64,18 +68,16 @@ export const Nav = ({ products }: { products?: ProductListItem[] }) => {
     return () => {
       cancelled = true;
     };
-  }, [products, productsFromContext, clientProducts, locale]);
+  }, [locale, products, productsFromContext]);
 
   const productList: NavProductItem[] = useMemo(() => {
-    const resolved =
-      products && products.length
-        ? products
-        : productsFromContext && productsFromContext.length
-          ? productsFromContext
-          : clientProducts && clientProducts.length
-            ? clientProducts
-            : [];
-
+    const resolved = products?.length
+      ? products
+      : productsFromContext?.length
+        ? productsFromContext
+        : clientProducts != null && clientProducts.length
+          ? clientProducts
+          : [];
     return resolved.map((p) => ({
       key: p.id,
       hrefId: p.slug,

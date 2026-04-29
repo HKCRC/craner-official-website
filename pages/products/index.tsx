@@ -10,6 +10,7 @@ import { MotionRevealUp } from "@/components/animated-text";
 import { GetServerSideProps } from "next";
 import {
   type Config,
+  type ContactInfo,
   type Paginated,
   type ProductListItem,
 } from "@/lib/api/public-read";
@@ -17,14 +18,17 @@ import { getProductsCached } from "@/lib/data/products-cache";
 import { getImageUrl, langToCategory } from "@/lib/helper";
 import { usePublicConfig } from "@/lib/public-config-context";
 import { getPublicConfigCached } from "@/lib/data/public-config-cache";
+import { getContactsCached } from "@/lib/data/contacts-cache";
 import { useTranslation } from "next-export-i18n";
 
 const outfit = Outfit({ subsets: ["latin"] });
 
 export default function ProductsArchive({
   products,
+  contacts,
 }: {
   products: Paginated<ProductListItem>;
+  contacts: ContactInfo[];
 }) {
   const router = useRouter();
   const locale = (router.query.lang as string) || "zh-HK";
@@ -295,7 +299,7 @@ export default function ProductsArchive({
         </div>
       </div>
 
-      <Footer />
+      <Footer contacts={contacts} />
     </div>
   );
 }
@@ -303,23 +307,25 @@ export default function ProductsArchive({
 export const getServerSideProps: GetServerSideProps<{
   products: Paginated<ProductListItem>;
   config: Config;
+  contacts: ContactInfo[];
 }> = async (ctx) => {
+  const fetchInit = { baseUrl: process.env.REQUEST_BASE_URL };
   const pageParam = Array.isArray(ctx.query.page)
     ? ctx.query.page[0]
     : ctx.query.page;
   const page = Math.max(1, Number.parseInt(pageParam ?? "1", 10) || 1);
   const category = langToCategory(ctx.query.lang as string);
-  const products = await getProductsCached(
-    { page, pageSize: 9 },
-    { baseUrl: process.env.REQUEST_BASE_URL },
-    undefined,
-    `product-${category}`,
-  );
-
-  const config = await getPublicConfigCached({
-    baseUrl: process.env.REQUEST_BASE_URL,
-  });
+  const [products, config, contacts] = await Promise.all([
+    getProductsCached(
+      { page, pageSize: 9 },
+      fetchInit,
+      undefined,
+      `product-${category}`,
+    ),
+    getPublicConfigCached(fetchInit),
+    getContactsCached(fetchInit),
+  ]);
   return {
-    props: { products, config },
+    props: { products, config, contacts },
   };
 };

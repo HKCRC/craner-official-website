@@ -10,6 +10,7 @@ import { SEO_CONFIG } from "@/constants/seo";
 import {
   getPostBySlug,
   type Config,
+  type ContactInfo,
   type Paginated,
   type PostDetail,
   type ProductListItem,
@@ -18,9 +19,11 @@ import { getImageUrl } from "@/lib/helper";
 import { renderCaseHtmlContent } from "@/lib/render-case-html";
 import { getPublicConfigCached } from "@/lib/data/public-config-cache";
 import { getProductsCached } from "@/lib/data/products-cache";
+import { getContactsCached } from "@/lib/data/contacts-cache";
 
 export default function ArticleDetail({
   article,
+  contacts,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { t } = useTranslation();
   const router = useRouter();
@@ -116,7 +119,7 @@ export default function ArticleDetail({
           : null}
       </div>
 
-      <Footer />
+      <Footer contacts={contacts} />
     </div>
   );
 }
@@ -125,15 +128,17 @@ export const getServerSideProps: GetServerSideProps<{
   article: PostDetail;
   config: Config;
   products: Paginated<ProductListItem>;
+  contacts: ContactInfo[];
 }> = async ({ params }) => {
   const id = params?.id as string;
   const fetchInit = { baseUrl: process.env.REQUEST_BASE_URL };
 
-  const [article, config, products] = await Promise.all([
+  const [article, config, products, contacts] = await Promise.all([
     getPostBySlug(id, fetchInit),
     getPublicConfigCached(fetchInit),
     getProductsCached({ pageSize: 50 }, fetchInit),
+    getContactsCached(fetchInit),
   ]);
   if (!id || !article) return { notFound: true };
-  return { props: { article, config, products } };
+  return { props: { article, config, products, contacts } };
 };
