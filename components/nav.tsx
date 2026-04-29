@@ -141,7 +141,7 @@ export const Nav = ({ products }: { products?: ProductListItem[] }) => {
           className={`md:pl-2 pr-2 py-1 w-full ml-auto mr-auto transition-all duration-500 ${
             isScrolledNav
               ? "max-w-6xl mx-auto bg-white/90 backdrop-blur-xl border-slate-200 shadow-md rounded-2xl"
-              : "max-w-6xl mx-auto bg-black/30 backdrop-blur-lg border border-white/10 shadow-lg rounded-2xl"
+              : ""
           }`}
         >
           <div className="flex items-center">
