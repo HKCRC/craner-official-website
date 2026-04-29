@@ -5,7 +5,10 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 7998",
+    "pm2:start": "pm2 start ecosystem.config.cjs",
+    "pm2:reload": "pm2 reload craner-web",
+    "pm2:stop": "pm2 stop craner-web",
     "lint": "next lint"
   },
   "dependencies": {
