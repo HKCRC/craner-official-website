@@ -1,4 +1,5 @@
 import { getContactInfos, type ContactInfo } from "@/lib/api/public-read";
+import { getPublicContentCacheTtlMs } from "@/lib/data/cache-ttl";
 
 type CacheState = {
   value: ContactInfo[];
@@ -17,7 +18,7 @@ function cacheKey(init?: Parameters<typeof getContactInfos>[0]) {
  */
 export async function getContactsCached(
   init?: Parameters<typeof getContactInfos>[0],
-  ttlMs: number = 5 * 60 * 1000,
+  ttlMs: number = getPublicContentCacheTtlMs(),
 ): Promise<ContactInfo[]> {
   const key = cacheKey(init);
   const now = Date.now();
@@ -30,7 +31,8 @@ export async function getContactsCached(
     cacheByBaseUrl.set(key, { value, expiresAt: now + ttlMs });
     return value;
   } catch {
-    cacheByBaseUrl.set(key, { value: [], expiresAt: now + ttlMs });
+    // Keep serving last good value on transient upstream failures.
+    if (hit) return hit.value;
     return [];
   }
 }

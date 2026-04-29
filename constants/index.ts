@@ -108,15 +108,15 @@ export enum VIDEO_INTRO_ENUM {
 export const businessEmail = "cranerbusiness@craner.hk";
 
 export enum QUERY_MULTI_LANGUAGE_ENUM {
-  "news" = "news", // /articles
-  "news-cn" = "news-cn",
-  "news-hk" = "news-hk",
+  "newsEn" = "news-en", // /articles
+  "newsCn" = "news-cn",
+  "newsHk" = "news-hk",
 
-  "cases" = "cases", // /cases
-  "cases-cn" = "cases-cn",
-  "cases-hk" = "cases-hk",
+  "casesEn" = "cases-en", // /cases
+  "casesCn" = "cases-cn",
+  "casesHk" = "cases-hk",
 
-  "product" = "product", // /products
-  "products-cn" = "product-cn",
-  "products-hk" = "product-hk",
+  "productEn" = "product-en", // /products
+  "productCn" = "product-cn",
+  "productHk" = "product-hk",
 }

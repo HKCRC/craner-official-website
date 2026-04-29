@@ -2,6 +2,7 @@ import {
   getHomepageBanners,
   type HomepageBanner,
 } from "@/lib/api/public-read";
+import { getPublicContentCacheTtlMs } from "@/lib/data/cache-ttl";
 
 type CacheState = {
   value: HomepageBanner[];
@@ -17,7 +18,7 @@ function makeKey(init?: { baseUrl?: string }) {
 /** Server-side TTL cache for public homepage-banner list. */
 export async function getHomepageBannersCached(
   init?: Parameters<typeof getHomepageBanners>[0],
-  ttlMs: number = 5 * 60 * 1000,
+  ttlMs: number = getPublicContentCacheTtlMs(),
 ): Promise<{ ok: true; banners: HomepageBanner[] }> {
   const key = makeKey(init);
   const now = Date.now();

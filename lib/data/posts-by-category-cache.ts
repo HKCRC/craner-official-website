@@ -2,6 +2,7 @@ import {
   getPostsByCategory,
   type PostsByCategoryResponse,
 } from "@/lib/api/public-read";
+import { getPublicContentCacheTtlMs } from "@/lib/data/cache-ttl";
 
 type CacheState = {
   value: PostsByCategoryResponse;
@@ -29,7 +30,7 @@ export async function getPostsByCategoryCached(
   categorySlug: string,
   params?: Parameters<typeof getPostsByCategory>[1],
   init?: Parameters<typeof getPostsByCategory>[2],
-  ttlMs: number = 5 * 60 * 1000,
+  ttlMs: number = getPublicContentCacheTtlMs(),
 ): Promise<PostsByCategoryResponse> {
   const key = makeKey(categorySlug, params, init);
   const now = Date.now();

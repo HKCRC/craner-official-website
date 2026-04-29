@@ -2,6 +2,7 @@ import {
   getFeaturedProducts,
   type FeaturedProduct,
 } from "@/lib/api/public-read";
+import { getPublicContentCacheTtlMs } from "@/lib/data/cache-ttl";
 
 type CacheState = {
   value: FeaturedProduct[];
@@ -20,7 +21,7 @@ function makeKey(params?: { take?: number }, init?: { baseUrl?: string }) {
 export async function getFeaturedProductsCached(
   params?: Parameters<typeof getFeaturedProducts>[0],
   init?: Parameters<typeof getFeaturedProducts>[1],
-  ttlMs: number = 5 * 60 * 1000,
+  ttlMs: number = getPublicContentCacheTtlMs(),
 ): Promise<{ ok: true; items: FeaturedProduct[] }> {
   const key = makeKey(params, init);
   const now = Date.now();

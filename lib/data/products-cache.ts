@@ -1,4 +1,5 @@
 import { getProducts, type Paginated, type ProductListItem } from "@/lib/api/public-read";
+import { getPublicContentCacheTtlMs } from "@/lib/data/cache-ttl";
 
 type CacheState<T> = {
   value: T;
@@ -28,7 +29,7 @@ function makeKey(
 export async function getProductsCached(
   params?: Parameters<typeof getProducts>[0],
   init?: Parameters<typeof getProducts>[1],
-  ttlMs: number = 5 * 60 * 1000,
+  ttlMs: number = getPublicContentCacheTtlMs(),
   categorySlug?: string,
 ): Promise<Paginated<ProductListItem>> {
 

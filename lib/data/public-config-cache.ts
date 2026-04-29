@@ -1,4 +1,5 @@
 import { getConfig, type Config } from "@/lib/api/public-read";
+import { getPublicConfigCacheTtlMs } from "@/lib/data/cache-ttl";
 
 type CacheState = {
   value: Config;
@@ -18,7 +19,7 @@ function cacheKey(init?: Parameters<typeof getConfig>[0]) {
  */
 export async function getPublicConfigCached(
   init?: Parameters<typeof getConfig>[0],
-  ttlMs: number = 5 * 60 * 1000,
+  ttlMs: number = getPublicConfigCacheTtlMs(),
 ): Promise<Config> {
   const key = cacheKey(init);
   const now = Date.now();
